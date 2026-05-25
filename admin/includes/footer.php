@@ -33,15 +33,21 @@
         </div>
     </footer>
     
-    <script src="js/common.js"></script>
+    <script src="js/common.js?v=<?php echo file_exists(__DIR__ . '/../js/common.js') ? filemtime(__DIR__ . '/../js/common.js') : time(); ?>"></script>
     <?php if (basename($_SERVER['PHP_SELF']) == 'dashboard.php'): ?>
-        <script src="js/dashboard.js"></script>
+        <script src="js/dashboard.js?v=<?php echo file_exists(__DIR__ . '/../js/dashboard.js') ? filemtime(__DIR__ . '/../js/dashboard.js') : time(); ?>"></script>
     <?php elseif (basename($_SERVER['PHP_SELF']) == 'publicar-propiedad.php'): ?>
-        <script src="js/publicar-propiedad.js"></script>
+        <script src="js/publicar-propiedad.js?v=<?php echo file_exists(__DIR__ . '/../js/publicar-propiedad.js') ? filemtime(__DIR__ . '/../js/publicar-propiedad.js') : time(); ?>"></script>
     <?php elseif (basename($_SERVER['PHP_SELF']) == 'mis-propiedades.php'): ?>
-        <script src="js/mis-propiedades.js"></script>
+        <script src="js/mis-propiedades.js?v=<?php echo file_exists(__DIR__ . '/../js/mis-propiedades.js') ? filemtime(__DIR__ . '/../js/mis-propiedades.js') : time(); ?>"></script>
     <?php elseif (basename($_SERVER['PHP_SELF']) == 'configuracion.php'): ?>
-        <script src="js/configuracion.js"></script>
+        <script src="js/configuracion.js?v=<?php echo file_exists(__DIR__ . '/../js/configuracion.js') ? filemtime(__DIR__ . '/../js/configuracion.js') : time(); ?>"></script>
+    <?php elseif (basename($_SERVER['PHP_SELF']) == 'chat.php'): ?>
+        <script src="js/chat.js?v=<?php echo file_exists(__DIR__ . '/../js/chat.js') ? filemtime(__DIR__ . '/../js/chat.js') : time(); ?>"></script>
+    <?php elseif (basename($_SERVER['PHP_SELF']) == 'arrendamientos.php'): ?>
+        <script src="js/arrendamientos.js?v=<?php echo file_exists(__DIR__ . '/../js/arrendamientos.js') ? filemtime(__DIR__ . '/../js/arrendamientos.js') : time(); ?>"></script>
+    <?php elseif (basename($_SERVER['PHP_SELF']) == 'super-admin.php'): ?>
+        <script src="js/super-admin.js?v=<?php echo file_exists(__DIR__ . '/../js/super-admin.js') ? filemtime(__DIR__ . '/../js/super-admin.js') : time(); ?>"></script>
     <?php endif; ?>
 </body>
 </html>

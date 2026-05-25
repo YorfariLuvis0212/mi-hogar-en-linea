@@ -4,6 +4,20 @@ let currentUser = null;
 // Cargar información del usuario
 async function loadUserInfo() {
     try {
+        // Hydrate from cache first (faster navigation)
+        try {
+            const cached = sessionStorage.getItem('currentUser');
+            if (cached && !currentUser) {
+                const parsed = JSON.parse(cached);
+                if (parsed && parsed.id) {
+                    currentUser = parsed;
+                    updateUserInfo();
+                }
+            }
+        } catch (e) {
+            // ignore cache errors
+        }
+
         const response = await fetch('../api/auth.php', {
             method: 'GET',
             credentials: 'include'
@@ -13,9 +27,19 @@ async function loadUserInfo() {
         
         if (data.success && data.user) {
             currentUser = data.user;
+            try {
+                sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
+            } catch (e) {
+                // ignore storage errors
+            }
             updateUserInfo();
             return true;
         } else {
+            try {
+                sessionStorage.removeItem('currentUser');
+            } catch (e) {
+                // ignore
+            }
             return false;
         }
     } catch (error) {

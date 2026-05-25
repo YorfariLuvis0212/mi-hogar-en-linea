@@ -43,6 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['user_name'] = $user->nombre;
                 $_SESSION['user_email'] = $user->email;
                 $_SESSION['user_avatar'] = $user->avatar;
+                $_SESSION['user_rol'] = $user->rol ?? 'user';
                 $_SESSION['logged_in'] = true;
                 $_SESSION['last_activity'] = time();
                 

@@ -62,14 +62,35 @@ class Property {
     }
 
     public function getPropertiesByUser($user_id) {
-        $query = "SELECT p.*, 
-                  (SELECT imagen_url FROM imagenes_propiedad WHERE id_propiedad = p.id AND es_principal = 1 LIMIT 1) as imagen_principal,
-                  COUNT(DISTINCT m.id) as total_mensajes
-                  FROM " . $this->table_name . " p 
-                  LEFT JOIN mensajes m ON p.id = m.id_propiedad
-                  WHERE p.id_usuario = :user_id 
-                  GROUP BY p.id
-                  ORDER BY p.fecha_publicacion DESC";
+        // Primero verificar si existe la columna visualizaciones
+        try {
+            $checkCol = $this->conn->query("SHOW COLUMNS FROM propiedades LIKE 'visualizaciones'");
+            $hasVisualizaciones = $checkCol->rowCount() > 0;
+        } catch (PDOException $e) {
+            $hasVisualizaciones = false;
+        }
+        
+        if ($hasVisualizaciones) {
+            $query = "SELECT p.*, 
+                      (SELECT imagen_url FROM imagenes_propiedad WHERE id_propiedad = p.id AND es_principal = 1 LIMIT 1) as imagen_principal,
+                      COUNT(DISTINCT m.id) as total_mensajes,
+                      COALESCE(p.visualizaciones, 0) as visualizaciones
+                      FROM " . $this->table_name . " p 
+                      LEFT JOIN mensajes m ON p.id = m.id_propiedad
+                      WHERE p.id_usuario = :user_id AND (p.estado = 'disponible' OR p.estado = 'arrendada')
+                      GROUP BY p.id
+                      ORDER BY p.fecha_publicacion DESC";
+        } else {
+            $query = "SELECT p.*, 
+                      (SELECT imagen_url FROM imagenes_propiedad WHERE id_propiedad = p.id AND es_principal = 1 LIMIT 1) as imagen_principal,
+                      COUNT(DISTINCT m.id) as total_mensajes,
+                      0 as visualizaciones
+                      FROM " . $this->table_name . " p 
+                      LEFT JOIN mensajes m ON p.id = m.id_propiedad
+                      WHERE p.id_usuario = :user_id AND (p.estado = 'disponible' OR p.estado = 'arrendada')
+                      GROUP BY p.id
+                      ORDER BY p.fecha_publicacion DESC";
+        }
         
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(":user_id", $user_id);
@@ -173,6 +194,88 @@ class Property {
         $stmt->bindParam(":image_url", $image_url);
         $stmt->bindParam(":is_primary", $is_primary);
 
+        return $stmt->execute();
+    }
+
+    private function ensureVideosTable() {
+        $sql = "CREATE TABLE IF NOT EXISTS videos_propiedad (
+                    id INT(11) NOT NULL AUTO_INCREMENT,
+                    id_propiedad INT(11) NOT NULL,
+                    video_url VARCHAR(255) NOT NULL,
+                    es_principal TINYINT(4) DEFAULT 0,
+                    fecha_subida TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    PRIMARY KEY (id),
+                    KEY idx_videos_propiedad (id_propiedad)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci";
+        $this->conn->exec($sql);
+
+        // Migración: si la tabla existía sin es_principal, agregarla
+        try {
+            $checkCol = $this->conn->query("SHOW COLUMNS FROM videos_propiedad LIKE 'es_principal'");
+            if ($checkCol && $checkCol->rowCount() === 0) {
+                $this->conn->exec("ALTER TABLE videos_propiedad ADD COLUMN es_principal TINYINT(4) DEFAULT 0");
+            }
+        } catch (PDOException $e) {
+            // ignore
+        }
+    }
+
+    public function addVideo($property_id, $video_url) {
+        $this->ensureVideosTable();
+
+        // Si es el primer video, hacerlo principal
+        $is_primary = 0;
+        try {
+            $stmt = $this->conn->prepare("SELECT COUNT(*) as c FROM videos_propiedad WHERE id_propiedad = :property_id");
+            $stmt->bindParam(":property_id", $property_id);
+            $stmt->execute();
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            $count = (int)($row['c'] ?? 0);
+            if ($count === 0) {
+                $is_primary = 1;
+            }
+        } catch (PDOException $e) {
+            $is_primary = 0;
+        }
+
+        $query = "INSERT INTO videos_propiedad SET id_propiedad=:property_id, video_url=:video_url, es_principal=:is_primary";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":property_id", $property_id);
+        $stmt->bindParam(":video_url", $video_url);
+        $stmt->bindParam(":is_primary", $is_primary);
+        return $stmt->execute();
+    }
+
+    public function getPropertyVideos($property_id) {
+        $this->ensureVideosTable();
+        $query = "SELECT * FROM videos_propiedad WHERE id_propiedad = :property_id ORDER BY es_principal DESC, id ASC";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":property_id", $property_id);
+        $stmt->execute();
+        return $stmt;
+    }
+
+    public function setPrimaryVideo($video_id, $property_id) {
+        $this->ensureVideosTable();
+
+        $query = "UPDATE videos_propiedad SET es_principal = 0 WHERE id_propiedad = :property_id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":property_id", $property_id);
+        $stmt->execute();
+
+        $query = "UPDATE videos_propiedad SET es_principal = 1 WHERE id = :video_id AND id_propiedad = :property_id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":video_id", $video_id);
+        $stmt->bindParam(":property_id", $property_id);
+        return $stmt->execute();
+    }
+
+    public function deleteVideo($video_id, $property_id) {
+        $this->ensureVideosTable();
+        $query = "DELETE FROM videos_propiedad WHERE id = :video_id AND id_propiedad = :property_id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":video_id", $video_id);
+        $stmt->bindParam(":property_id", $property_id);
         return $stmt->execute();
     }
 

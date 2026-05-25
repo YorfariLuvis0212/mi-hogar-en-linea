@@ -10,6 +10,7 @@ class User {
     public $telefono;
     public $whatsapp;
     public $avatar;
+    public $rol;
     public $fecha_registro;
 
     public function __construct($db) {
@@ -17,7 +18,7 @@ class User {
     }
 
     public function login($email, $password) {
-        $query = "SELECT id, nombre, email, password, telefono, whatsapp, avatar 
+        $query = "SELECT id, nombre, email, password, telefono, whatsapp, avatar, rol 
                   FROM " . $this->table_name . " 
                   WHERE email = :email AND activo = 1";
         
@@ -35,6 +36,7 @@ class User {
                 $this->telefono = $row['telefono'];
                 $this->whatsapp = $row['whatsapp'];
                 $this->avatar = $row['avatar'];
+                $this->rol = $row['rol'] ?? 'user';
                 
                 return true;
             }
@@ -55,14 +57,16 @@ class User {
 
         // Insertar nuevo usuario
         $query = "INSERT INTO " . $this->table_name . " 
-                  SET nombre=:nombre, email=:email, password=:password, telefono=:telefono, whatsapp=:whatsapp";
+                  SET nombre=:nombre, email=:email, password=:password, telefono=:telefono, whatsapp=:whatsapp, rol=:rol";
         
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(":nombre", $nombre);
         $stmt->bindParam(":email", $email);
         $stmt->bindParam(":telefono", $telefono);
         $stmt->bindParam(":whatsapp", $whatsapp);
-        
+        $rol = 'user';
+        $stmt->bindParam(":rol", $rol);
+
         // Hash de la contraseña
         $password_hash = password_hash($password, PASSWORD_DEFAULT);
         $stmt->bindParam(":password", $password_hash);
@@ -73,13 +77,14 @@ class User {
             $this->email = $email;
             $this->telefono = $telefono;
             $this->whatsapp = $whatsapp;
+            $this->rol = $rol;
             return true;
         }
         return false;
     }
 
     public function getUserById($id) {
-        $query = "SELECT id, nombre, email, telefono, whatsapp, avatar, fecha_registro 
+        $query = "SELECT id, nombre, email, telefono, whatsapp, avatar, rol, fecha_registro 
                   FROM " . $this->table_name . " 
                   WHERE id = :id AND activo = 1";
         

@@ -26,7 +26,7 @@ try {
             ip.imagen_url as imagen_principal
         FROM propiedades p
         LEFT JOIN imagenes_propiedad ip ON p.id = ip.id_propiedad AND ip.es_principal = 1
-        WHERE p.estado = 'disponible'
+        WHERE p.estado = 'disponible' OR p.estado = 'arrendada'
         ORDER BY p.fecha_publicacion ASC
         LIMIT 3
     ");
@@ -130,8 +130,13 @@ try {
                             : 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80';
                     ?>
                         <div class="propiedad-card <?php echo $delay_classes[$delay_index]; ?>">
-                            <div class="propiedad-img" style="background-image: url('<?php echo htmlspecialchars($imagen_url); ?>');">
+                            <div class="propiedad-img" style="background-image: url('<?php echo htmlspecialchars($imagen_url); ?>'); position: relative;">
                                 <span class="propiedad-destacada">Destacada</span>
+                                <?php if ($propiedad['estado'] === 'arrendada'): ?>
+                                    <span style="position: absolute; top: 10px; right: 10px; background-color: #e53e3e; color: white; padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">
+                                        Arrendada
+                                    </span>
+                                <?php endif; ?>
                             </div>
                             <div class="propiedad-info">
                                 <div class="propiedad-precio">$<?php echo number_format($propiedad['precio'], 0, ',', '.'); ?>/mes</div>

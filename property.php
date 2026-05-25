@@ -35,7 +35,7 @@ $query = "
         ip.imagen_url as imagen_principal
     FROM propiedades p
     LEFT JOIN imagenes_propiedad ip ON p.id = ip.id_propiedad AND ip.es_principal = 1
-    WHERE p.estado = 'disponible'
+    WHERE p.estado = 'disponible' OR p.estado = 'arrendada'
 ";
 
 $params = [];
@@ -170,12 +170,19 @@ try {
                     <?php foreach ($propiedades as $propiedad): ?>
                         <div class="propiedad-card">
                             <!-- Imagen de la propiedad -->
-                            <img 
-                                src="<?php echo $propiedad['imagen_principal'] ?: 'images/default-property.jpg'; ?>" 
-                                alt="<?php echo htmlspecialchars($propiedad['titulo']); ?>"
-                                class="propiedad-imagen"
-                                onerror="this.src='images/default-property.jpg'"
-                            >
+                            <div style="position: relative;">
+                                <img 
+                                    src="<?php echo $propiedad['imagen_principal'] ?: 'images/default-property.jpg'; ?>" 
+                                    alt="<?php echo htmlspecialchars($propiedad['titulo']); ?>"
+                                    class="propiedad-imagen"
+                                    onerror="this.onerror=null;this.src='images/default-property.jpg'"
+                                >
+                                <?php if ($propiedad['estado'] === 'arrendada'): ?>
+                                    <span style="position: absolute; top: 10px; right: 10px; background-color: #e53e3e; color: white; padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">
+                                        Arrendada
+                                    </span>
+                                <?php endif; ?>
+                            </div>
                             
                             <div class="propiedad-content">
                                 <!-- Header con precio y tipo -->

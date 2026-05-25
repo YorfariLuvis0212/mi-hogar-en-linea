@@ -106,6 +106,79 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 "errors" => $errors
             ));
         }
+    } elseif (isset($_FILES['videos']) && isset($_POST['property_id'])) {
+        $property_id = $_POST['property_id'];
+        $user_id = $_SESSION['user_id'];
+
+        // Verificar que la propiedad pertenece al usuario
+        $prop_data = $property->getPropertyById($property_id, $user_id);
+        if (!$prop_data) {
+            http_response_code(403);
+            echo json_encode(array("success" => false, "message" => "No tienes permisos para esta propiedad"));
+            exit;
+        }
+
+        $upload_dir = "../uploads/properties/" . $property_id . "/videos/";
+        if (!file_exists($upload_dir)) {
+            mkdir($upload_dir, 0777, true);
+        }
+
+        $uploaded_files = array();
+        $errors = array();
+
+        foreach ($_FILES['videos']['tmp_name'] as $key => $tmp_name) {
+            $file_name = $_FILES['videos']['name'][$key];
+            $file_size = $_FILES['videos']['size'][$key];
+            $file_tmp = $_FILES['videos']['tmp_name'][$key];
+
+            $allowed_types = array('mp4', 'webm', 'mov');
+            $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+            if (!in_array($file_ext, $allowed_types)) {
+                $errors[] = "Tipo de video no permitido: $file_name";
+                continue;
+            }
+
+            // Validar tamaño (máximo 50MB)
+            if ($file_size > 50000000) {
+                $errors[] = "Video demasiado grande: $file_name";
+                continue;
+            }
+
+            $new_file_name = uniqid() . '.' . $file_ext;
+            $file_path = $upload_dir . $new_file_name;
+
+            if (move_uploaded_file($file_tmp, $file_path)) {
+                $video_url = "uploads/properties/" . $property_id . "/videos/" . $new_file_name;
+                if ($property->addVideo($property_id, $video_url)) {
+                    $uploaded_files[] = array(
+                        "original_name" => $file_name,
+                        "saved_name" => $new_file_name,
+                        "url" => $video_url
+                    );
+                } else {
+                    $errors[] = "Error al guardar información del video: $file_name";
+                    unlink($file_path);
+                }
+            } else {
+                $errors[] = "Error al subir el video: $file_name";
+            }
+        }
+
+        if (count($uploaded_files) > 0) {
+            echo json_encode(array(
+                "success" => true,
+                "message" => count($uploaded_files) . " video(s) subido(s) exitosamente",
+                "files" => $uploaded_files,
+                "errors" => $errors
+            ));
+        } else {
+            http_response_code(400);
+            echo json_encode(array(
+                "success" => false,
+                "message" => "No se pudieron subir los videos",
+                "errors" => $errors
+            ));
+        }
     } else {
         http_response_code(400);
         echo json_encode(array("success" => false, "message" => "Datos incompletos"));

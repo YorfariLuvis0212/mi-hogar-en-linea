@@ -53,6 +53,7 @@ if ($method == 'POST') {
             $_SESSION['user_id'] = $user->id;
             $_SESSION['user_name'] = $user->nombre;
             $_SESSION['user_email'] = $user->email;
+            $_SESSION['user_rol'] = $user->rol ?? 'user';
             $_SESSION['logged_in'] = true;
             $_SESSION['last_activity'] = time();
             
@@ -67,7 +68,8 @@ if ($method == 'POST') {
                     "nombre" => $user->nombre,
                     "email" => $user->email,
                     "telefono" => $user->telefono,
-                    "avatar" => $user->avatar
+                    "avatar" => $user->avatar,
+                    "rol" => $user->rol ?? 'user'
                 )
             ));
         } else {

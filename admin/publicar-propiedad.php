@@ -30,8 +30,8 @@ require_once 'includes/header.php';
             
             <div class="form-row">
                 <div class="form-group">
-                    <label for="propertyPrice">Precio Mensual (USD) *</label>
-                    <input type="number" id="propertyPrice" class="form-control" placeholder="Ej: 850" min="0" step="0.01" required>
+                    <label for="propertyPrice">Precio Mensual (COP) *</label>
+                    <input type="number" id="propertyPrice" class="form-control" placeholder="Ej: 850000" min="0" step="0.01" required>
                 </div>
                 <div class="form-group">
                     <label for="propertyLocation">Ubicación *</label>
@@ -67,8 +67,8 @@ require_once 'includes/header.php';
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="area">Área (m²) *</label>
-                    <input type="number" id="area" class="form-control" placeholder="Ej: 120" min="0" step="0.01" required>
+                    <label for="area">Área (m²)</label>
+                    <input type="number" id="area" class="form-control" placeholder="Ej: 120" min="0" step="0.01">
                 </div>
             </div>
 
@@ -96,7 +96,7 @@ require_once 'includes/header.php';
             </div>
             
             <div class="form-group">
-                <label>Imágenes de la Propiedad</label>
+                <label>Imágenes de la Propiedad *</label>
                 <div id="existingImagesContainer"></div>
                 <div class="file-upload" id="fileUploadArea">
                     <i class="fas fa-cloud-upload-alt"></i>
@@ -105,6 +105,17 @@ require_once 'includes/header.php';
                     <input type="file" id="propertyImages" class="file-input" multiple accept="image/*">
                 </div>
                 <div class="file-preview" id="filePreview"></div>
+            </div>
+
+            <div class="form-group">
+                <label>Videos de la Propiedad (opcional)</label>
+                <div class="file-upload" id="videoUploadArea">
+                    <i class="fas fa-video"></i>
+                    <p>Arrastra y suelta los videos aquí o haz clic para seleccionar</p>
+                    <button type="button" class="btn btn-outline">Seleccionar Videos</button>
+                    <input type="file" id="propertyVideos" class="file-input" multiple accept="video/*">
+                </div>
+                <div class="file-preview" id="videoPreview"></div>
             </div>
             
             <div class="form-actions">

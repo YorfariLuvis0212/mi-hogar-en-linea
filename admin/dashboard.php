@@ -29,15 +29,6 @@ require_once 'includes/header.php';
                             <p>Visualizaciones</p>
                         </div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-icon messages">
-                            <i class="fas fa-envelope"></i>
-                        </div>
-                        <div class="stat-info">
-                            <h3 id="totalMessages">0</h3>
-                            <p>Mensajes Nuevos</p>
-                        </div>
-                    </div>
                 </div>
 
                 <!-- Propiedades recientes -->

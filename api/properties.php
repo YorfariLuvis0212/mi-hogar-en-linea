@@ -37,6 +37,14 @@ if ($method == 'GET') {
             }
             
             $prop_data['imagenes'] = $images;
+
+            // Obtener videos de la propiedad
+            $videos_stmt = $property->getPropertyVideos($property_id);
+            $videos = array();
+            while ($v_row = $videos_stmt->fetch(PDO::FETCH_ASSOC)) {
+                $videos[] = $v_row;
+            }
+            $prop_data['videos'] = $videos;
             
             echo json_encode(array(
                 "success" => true,
@@ -75,7 +83,7 @@ if ($method == 'GET') {
         $property->direccion = $data->direccion ?? '';
         $property->habitaciones = $data->habitaciones ?? 0;
         $property->banos = $data->banos ?? 0;
-        $property->area = $data->area ?? 0;
+        $property->area = (isset($data->area) && $data->area !== '' && $data->area !== null) ? $data->area : null;
         $property->amueblado = $data->amueblado ?? 0;
         $property->mascotas = $data->mascotas ?? 0;
         $property->estacionamiento = $data->estacionamiento ?? 0;
@@ -110,7 +118,7 @@ if ($method == 'GET') {
         $property->direccion = $data->direccion ?? '';
         $property->habitaciones = $data->habitaciones ?? 0;
         $property->banos = $data->banos ?? 0;
-        $property->area = $data->area ?? 0;
+        $property->area = (isset($data->area) && $data->area !== '' && $data->area !== null) ? $data->area : null;
         $property->amueblado = $data->amueblado ?? 0;
         $property->mascotas = $data->mascotas ?? 0;
         $property->estacionamiento = $data->estacionamiento ?? 0;

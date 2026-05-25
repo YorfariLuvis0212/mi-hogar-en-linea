@@ -1,6 +1,7 @@
 // Variables globales
 let editingPropertyId = null;
 let existingImages = [];
+let existingVideos = [];
 
 // Inicializar
 document.addEventListener('DOMContentLoaded', function() {
@@ -119,6 +120,32 @@ async function checkAuth() {
     }
 }
 
+// Subir videos
+async function uploadPropertyVideos(propertyId, files) {
+    const formData = new FormData();
+    formData.append('property_id', propertyId);
+
+    for (let i = 0; i < files.length; i++) {
+        formData.append('videos[]', files[i]);
+    }
+
+    try {
+        const response = await fetch('../api/upload.php', {
+            method: 'POST',
+            body: formData,
+            credentials: 'include'
+        });
+
+        const data = await response.json();
+
+        if (!data.success) {
+            console.error('Error al subir videos:', data.message);
+        }
+    } catch (error) {
+        console.error('Error al subir videos:', error);
+    }
+}
+
 // Configurar event listeners
 function setupEventListeners() {
     // Formulario de propiedad
@@ -129,6 +156,7 @@ function setupEventListeners() {
     
     // Subida de archivos
     setupFileUpload();
+    setupVideoUpload();
     
     // El botón de cerrar sesión está manejado en common.js
 }
@@ -141,9 +169,20 @@ async function handlePropertySubmit(e) {
     const originalText = submitBtn.innerHTML;
     
     try {
+        const imageFiles = document.getElementById('propertyImages')?.files;
+        const hasExistingImages = Array.isArray(existingImages) && existingImages.length > 0;
+        const hasNewImages = imageFiles && imageFiles.length > 0;
+        if (!hasExistingImages && !hasNewImages) {
+            alert('Debes subir al menos 1 imagen de la propiedad');
+            return;
+        }
+
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ' + (editingPropertyId ? 'Guardando...' : 'Publicando...');
         submitBtn.disabled = true;
         
+        const areaValue = (document.getElementById('area').value || '').trim();
+        const areaNumber = areaValue === '' ? null : parseFloat(areaValue);
+
         const propertyData = {
             titulo: document.getElementById('propertyTitle').value,
             descripcion: document.getElementById('propertyDescription').value,
@@ -153,7 +192,7 @@ async function handlePropertySubmit(e) {
             direccion: document.getElementById('propertyAddress').value,
             habitaciones: parseInt(document.getElementById('bedrooms').value),
             banos: parseInt(document.getElementById('bathrooms').value),
-            area: parseFloat(document.getElementById('area').value),
+            area: areaNumber,
             amueblado: document.getElementById('amueblado').checked ? 1 : 0,
             mascotas: document.getElementById('mascotas').checked ? 1 : 0,
             estacionamiento: document.getElementById('estacionamiento').checked ? 1 : 0
@@ -181,6 +220,12 @@ async function handlePropertySubmit(e) {
             const files = document.getElementById('propertyImages').files;
             if (files.length > 0) {
                 await uploadPropertyImages(propertyId, files);
+            }
+
+            // Subir videos si hay alguno
+            const videoFiles = document.getElementById('propertyVideos')?.files;
+            if (videoFiles && videoFiles.length > 0) {
+                await uploadPropertyVideos(propertyId, videoFiles);
             }
             
             alert(editingPropertyId ? '¡Propiedad actualizada exitosamente!' : '¡Propiedad publicada exitosamente!');
@@ -293,6 +338,227 @@ function setupFileUpload() {
     }
 }
 
+// Configurar subida de videos
+function setupVideoUpload() {
+    const videoUploadArea = document.getElementById('videoUploadArea');
+    const videoInput = document.getElementById('propertyVideos');
+    const videoPreview = document.getElementById('videoPreview');
+
+    if (!videoUploadArea || !videoInput || !videoPreview) return;
+
+    videoUploadArea.addEventListener('click', () => {
+        videoInput.click();
+    });
+
+    videoUploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        videoUploadArea.style.borderColor = 'var(--azul-primario)';
+        videoUploadArea.style.backgroundColor = 'rgba(26, 58, 95, 0.05)';
+    });
+
+    videoUploadArea.addEventListener('dragleave', () => {
+        videoUploadArea.style.borderColor = '#e2e8f0';
+        videoUploadArea.style.backgroundColor = 'transparent';
+    });
+
+    videoUploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        videoUploadArea.style.borderColor = '#e2e8f0';
+        videoUploadArea.style.backgroundColor = 'transparent';
+
+        if (e.dataTransfer.files.length > 0) {
+            videoInput.files = e.dataTransfer.files;
+            handleVideoSelection();
+        }
+    });
+
+    videoInput.addEventListener('change', handleVideoSelection);
+
+    function handleVideoSelection() {
+        videoPreview.innerHTML = '';
+        const files = videoInput.files;
+
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            if (!file.type.match('video.*')) continue;
+
+            const previewItem = document.createElement('div');
+            previewItem.className = 'file-preview-item';
+
+            const video = document.createElement('video');
+            video.src = URL.createObjectURL(file);
+            video.controls = true;
+            video.style.width = '100%';
+
+            const removeBtn = document.createElement('div');
+            removeBtn.className = 'remove';
+            removeBtn.innerHTML = '<i class="fas fa-times"></i>';
+            removeBtn.addEventListener('click', function() {
+                previewItem.remove();
+            });
+
+            previewItem.appendChild(video);
+            previewItem.appendChild(removeBtn);
+            videoPreview.appendChild(previewItem);
+        }
+    }
+}
+
+function displayExistingVideos(videos) {
+    const videoPreview = document.getElementById('videoPreview');
+    if (!videoPreview) return;
+
+    if (!Array.isArray(videos) || videos.length === 0) {
+        return;
+    }
+
+    videoPreview.innerHTML = '';
+    videos.forEach((v) => {
+        const url = v?.video_url || v?.url;
+        if (!url) return;
+
+        const videoId = v?.id;
+        const isPrimary = String(v?.es_principal) === '1' || v?.es_principal === 1;
+
+        const previewItem = document.createElement('div');
+        previewItem.className = 'file-preview-item';
+
+        previewItem.style.position = 'relative';
+        previewItem.style.border = '2px solid #e2e8f0';
+        previewItem.style.borderRadius = '8px';
+        previewItem.style.overflow = 'hidden';
+        previewItem.style.background = 'white';
+
+        const video = document.createElement('video');
+        video.src = '../' + url;
+        video.controls = true;
+        video.style.width = '100%';
+
+        if (isPrimary) {
+            const primaryBadge = document.createElement('span');
+            primaryBadge.textContent = 'Principal';
+            primaryBadge.style.background = 'var(--verde)';
+            primaryBadge.style.color = 'white';
+            primaryBadge.style.padding = '5px 10px';
+            primaryBadge.style.borderRadius = '4px';
+            primaryBadge.style.fontSize = '0.8rem';
+            primaryBadge.style.position = 'absolute';
+            primaryBadge.style.top = '5px';
+            primaryBadge.style.left = '5px';
+            previewItem.appendChild(primaryBadge);
+        }
+
+        const overlay = document.createElement('div');
+        overlay.style.position = 'absolute';
+        overlay.style.top = '0';
+        overlay.style.left = '0';
+        overlay.style.right = '0';
+        overlay.style.bottom = '0';
+        overlay.style.background = 'rgba(0,0,0,0.5)';
+        overlay.style.display = 'flex';
+        overlay.style.alignItems = 'center';
+        overlay.style.justifyContent = 'center';
+        overlay.style.gap = '10px';
+        overlay.style.opacity = '0';
+        overlay.style.transition = 'opacity 0.3s';
+
+        const setPrimaryBtn = document.createElement('button');
+        setPrimaryBtn.innerHTML = '<i class="fas fa-star"></i>';
+        setPrimaryBtn.className = 'btn btn-outline';
+        setPrimaryBtn.style.padding = '8px';
+        setPrimaryBtn.style.fontSize = '0.9rem';
+        setPrimaryBtn.title = 'Establecer como principal';
+        if (!videoId || isPrimary) {
+            setPrimaryBtn.disabled = true;
+            setPrimaryBtn.style.opacity = '0.5';
+        }
+        setPrimaryBtn.onclick = (e) => {
+            e.stopPropagation();
+            if (!videoId) return;
+            setPrimaryVideo(videoId, editingPropertyId);
+        };
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.innerHTML = '<i class="fas fa-trash"></i>';
+        deleteBtn.className = 'btn btn-outline';
+        deleteBtn.style.padding = '8px';
+        deleteBtn.style.fontSize = '0.9rem';
+        deleteBtn.style.background = '#e53e3e';
+        deleteBtn.style.color = 'white';
+        deleteBtn.style.border = 'none';
+        deleteBtn.title = 'Eliminar video';
+        if (!videoId) {
+            deleteBtn.disabled = true;
+            deleteBtn.style.opacity = '0.5';
+        }
+        deleteBtn.onclick = (e) => {
+            e.stopPropagation();
+            if (!videoId) return;
+            deleteVideo(videoId, editingPropertyId);
+        };
+
+        overlay.appendChild(setPrimaryBtn);
+        overlay.appendChild(deleteBtn);
+
+        previewItem.appendChild(video);
+        previewItem.appendChild(overlay);
+        videoPreview.appendChild(previewItem);
+
+        previewItem.addEventListener('mouseenter', () => {
+            overlay.style.opacity = '1';
+        });
+        previewItem.addEventListener('mouseleave', () => {
+            overlay.style.opacity = '0';
+        });
+    });
+}
+
+async function setPrimaryVideo(videoId, propertyId) {
+    try {
+        const response = await fetch('../api/videos.php', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ video_id: videoId, property_id: propertyId }),
+            credentials: 'include'
+        });
+
+        const data = await response.json();
+        if (data.success) {
+            await editProperty(propertyId);
+        } else {
+            alert('Error al establecer video principal: ' + (data.message || 'Error'));
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error al establecer video principal');
+    }
+}
+
+async function deleteVideo(videoId, propertyId) {
+    if (!confirm('¿Estás seguro de que quieres eliminar este video?')) {
+        return;
+    }
+
+    try {
+        const response = await fetch('../api/videos.php', {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ video_id: videoId, property_id: propertyId }),
+            credentials: 'include'
+        });
+
+        const data = await response.json();
+        if (data.success) {
+            await editProperty(propertyId);
+        } else {
+            alert('Error al eliminar el video: ' + (data.message || 'Error'));
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error al eliminar el video');
+    }
+}
+
 // Editar propiedad
 async function editProperty(propertyId) {
     try {
@@ -306,6 +572,7 @@ async function editProperty(propertyId) {
             const prop = data.property;
             editingPropertyId = propertyId;
             existingImages = prop.imagenes || [];
+            existingVideos = prop.videos || [];
             
             // Llenar el formulario
             document.getElementById('propertyTitle').value = prop.titulo || '';
@@ -323,11 +590,14 @@ async function editProperty(propertyId) {
             
             // Mostrar imágenes existentes
             displayExistingImages(existingImages);
+
+            // Mostrar videos existentes
+            displayExistingVideos(existingVideos);
             
             // Cambiar título y botón
             const formHeader = document.querySelector('.form-header h3');
             if (formHeader) {
-                formHeader.innerHTML = '<i class="fas fa-edit"></i> Editar Propiedad';
+                formHeader.textContent = 'Editar Propiedad';
             }
             document.getElementById('publishPropertyBtn').innerHTML = '<i class="fas fa-save"></i> Guardar Cambios';
         } else {

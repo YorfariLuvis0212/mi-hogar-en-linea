@@ -24,11 +24,39 @@ if (!$propiedad) {
     exit;
 }
 
+// Incrementar contador de visualizaciones
+try {
+    $stmt = $pdo->prepare("UPDATE propiedades SET visualizaciones = COALESCE(visualizaciones, 0) + 1 WHERE id = :property_id");
+    $stmt->bindParam(':property_id', $property_id);
+    $stmt->execute();
+} catch (PDOException $e) {
+    // Si la columna no existe, intentar crearla
+    try {
+        $pdo->exec("ALTER TABLE propiedades ADD COLUMN visualizaciones INT DEFAULT 0");
+        $stmt = $pdo->prepare("UPDATE propiedades SET visualizaciones = 1 WHERE id = :property_id");
+        $stmt->bindParam(':property_id', $property_id);
+        $stmt->execute();
+    } catch (PDOException $e2) {
+        // Ignorar error si no se puede crear la columna
+    }
+}
+
 // Obtener imágenes de la propiedad
 $images_stmt = $property->getPropertyImages($property_id);
 $images = [];
 while ($row = $images_stmt->fetch(PDO::FETCH_ASSOC)) {
     $images[] = $row;
+}
+
+// Obtener videos de la propiedad
+$videos = [];
+try {
+    $videos_stmt = $property->getPropertyVideos($property_id);
+    while ($vrow = $videos_stmt->fetch(PDO::FETCH_ASSOC)) {
+        $videos[] = $vrow;
+    }
+} catch (Exception $e) {
+    $videos = [];
 }
 
 // Obtener información del propietario
@@ -82,13 +110,15 @@ try {
                      id="mainImage">
                 <div class="thumbnail-grid">
                     <?php 
-                    $thumbnails = array_slice($images, 1, 4);
-                    foreach ($thumbnails as $thumb): 
+                    // Mostrar todas las imágenes como miniaturas, incluyendo la primera
+                    foreach ($images as $index => $thumb): 
+                        $isActive = $index === 0 ? 'active' : '';
                     ?>
                         <img src="<?php echo htmlspecialchars($thumb['imagen_url']); ?>" 
-                             alt="Thumbnail" 
-                             class="thumbnail" 
-                             onclick="changeMainImage('<?php echo htmlspecialchars($thumb['imagen_url']); ?>')">
+                             alt="Thumbnail <?php echo $index + 1; ?>" 
+                             class="thumbnail <?php echo $isActive; ?>" 
+                             onclick="changeMainImage('<?php echo htmlspecialchars($thumb['imagen_url']); ?>', <?php echo $index; ?>)"
+                             id="thumb<?php echo $index; ?>">
                     <?php endforeach; ?>
                 </div>
             <?php else: ?>
@@ -98,8 +128,28 @@ try {
             <?php endif; ?>
         </div>
 
+        <?php if (!empty($videos)): ?>
+            <div style="background: var(--blanco); padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 30px;">
+                <h2 class="section-title" style="margin-top:0;">Video</h2>
+                <div class="property-images" style="margin-bottom: 0;">
+                    <video class="main-image" id="mainVideo" controls preload="metadata" style="background:#000;">
+                        <source src="<?php echo htmlspecialchars($videos[0]['video_url']); ?>">
+                    </video>
+                    <div class="thumbnail-grid">
+                        <?php foreach ($videos as $index => $v): $isActive = $index === 0 ? 'active' : ''; ?>
+                            <video class="thumbnail <?php echo $isActive; ?>" preload="metadata"
+                                   onclick="changeMainVideo('<?php echo htmlspecialchars($v['video_url']); ?>', <?php echo $index; ?>)"
+                                   id="vthumb<?php echo $index; ?>">
+                                <source src="<?php echo htmlspecialchars($v['video_url']); ?>">
+                            </video>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            </div>
+        <?php endif; ?>
+
         <div class="property-content">
-            <div class="property-details">
+            <div class="property-details-container">
                 <h2 class="section-title">Descripción</h2>
                 <div class="property-description">
                     <?php echo nl2br(htmlspecialchars($propiedad['descripcion'] ?: 'No hay descripción disponible.')); ?>
@@ -200,6 +250,16 @@ try {
                                 <i class="fab fa-whatsapp"></i> Enviar Mensaje por WhatsApp
                             </a>
                         <?php endif; ?>
+
+                        <?php if (isset($_SESSION['user_id'])): ?>
+                            <button type="button" class="btn btn-primario" id="startChatBtn" style="width: 100%; margin-top: 10px;">
+                                <i class="fas fa-comments"></i> Iniciar conversación en la plataforma
+                            </button>
+                        <?php else: ?>
+                            <a href="login.php" class="btn btn-primario" style="width: 100%; margin-top: 10px; text-align: center;">
+                                <i class="fas fa-sign-in-alt"></i> Inicia sesión para chatear
+                            </a>
+                        <?php endif; ?>
                     </div>
                 <?php else: ?>
                     <p style="color: var(--gris);">Información del propietario no disponible.</p>
@@ -209,9 +269,65 @@ try {
     </div>
 
     <script>
-        function changeMainImage(imageUrl) {
+        function changeMainImage(imageUrl, thumbIndex) {
+            // Cambiar la imagen principal
             document.getElementById('mainImage').src = imageUrl;
+            
+            // Remover la clase active de todas las miniaturas
+            const thumbnails = document.querySelectorAll('.thumbnail');
+            thumbnails.forEach(thumb => {
+                thumb.classList.remove('active');
+            });
+            
+            // Agregar la clase active a la miniatura seleccionada
+            if (thumbIndex !== undefined && document.getElementById('thumb' + thumbIndex)) {
+                document.getElementById('thumb' + thumbIndex).classList.add('active');
+            }
         }
+
+        function changeMainVideo(videoUrl, thumbIndex) {
+            const main = document.getElementById('mainVideo');
+            if (!main) return;
+
+            try {
+                main.pause();
+            } catch (e) {}
+
+            main.src = videoUrl;
+            main.load();
+
+            const thumbs = document.querySelectorAll('[id^="vthumb"]');
+            thumbs.forEach(t => t.classList.remove('active'));
+            const active = document.getElementById('vthumb' + thumbIndex);
+            if (active) active.classList.add('active');
+        }
+
+        (function() {
+            const btn = document.getElementById('startChatBtn');
+            if (!btn) return;
+
+            btn.addEventListener('click', async function() {
+                btn.disabled = true;
+                try {
+                    const response = await fetch('api/chat.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        credentials: 'include',
+                        body: JSON.stringify({ action: 'start_from_property', property_id: <?php echo (int)$property_id; ?> })
+                    });
+                    const data = await response.json();
+                    if (!data.success) {
+                        alert(data.message || 'No se pudo iniciar la conversación');
+                        btn.disabled = false;
+                        return;
+                    }
+                    window.location.href = 'admin/chat.php';
+                } catch (e) {
+                    alert('Error al iniciar la conversación');
+                    btn.disabled = false;
+                }
+            });
+        })();
     </script>
 </body>
 </html>

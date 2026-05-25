@@ -170,11 +170,18 @@ function createPropertyCard(property) {
     card.dataset.id = property.id;
     
     const statusClass = property.estado === 'disponible' ? '' : 'style="background-color: #e53e3e;"';
-    const imageUrl = property.imagen_principal || 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80';
+    let imageUrl = property.imagen_principal || 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80';
+    // Si la imagen es una ruta relativa, agregar el prefijo correcto
+    if (imageUrl && !imageUrl.startsWith('http') && !imageUrl.startsWith('/')) {
+        imageUrl = '../' + imageUrl;
+    }
+    
+    const estadoTexto = property.estado === 'disponible' ? 'Disponible' : property.estado === 'arrendada' ? 'Arrendada' : property.estado;
+    const estadoCapitalizado = estadoTexto.charAt(0).toUpperCase() + estadoTexto.slice(1).toLowerCase();
     
     card.innerHTML = `
         <div class="property-image" style="background-image: url('${imageUrl}');">
-            <span class="property-status" ${statusClass}>${property.estado}</span>
+            <span class="property-status" ${statusClass}>${estadoCapitalizado}</span>
             <div class="property-actions">
                 <div class="property-action" title="Editar">
                     <i class="fas fa-edit"></i>
@@ -198,6 +205,16 @@ function createPropertyCard(property) {
                 <div class="property-feature">
                     <i class="fas fa-vector-square"></i> ${property.area} m²
                 </div>
+            </div>
+            <div class="property-status-actions" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #f1f5f9;">
+                ${property.estado === 'disponible' 
+                    ? `<button class="btn btn-outline" onclick="changePropertyStatus(${property.id}, 'arrendada')" style="width: 100%; font-size: 0.9rem;">
+                        <i class="fas fa-check-circle"></i> Marcar como Arrendada
+                       </button>`
+                    : `<button class="btn btn-outline" onclick="changePropertyStatus(${property.id}, 'disponible')" style="width: 100%; font-size: 0.9rem; background-color: var(--verde); color: white; border-color: var(--verde);">
+                        <i class="fas fa-home"></i> Marcar como Disponible
+                       </button>`
+                }
             </div>
         </div>
     `;
@@ -244,6 +261,71 @@ async function deleteProperty(propertyId) {
     } catch (error) {
         console.error('Error:', error);
         alert('Error al eliminar la propiedad');
+    }
+}
+
+// Cambiar estado de la propiedad
+async function changePropertyStatus(propertyId, newStatus) {
+    const statusText = newStatus === 'arrendada' ? 'arrendada' : 'disponible';
+    const confirmText = newStatus === 'arrendada' 
+        ? '¿Estás seguro de que quieres marcar esta propiedad como arrendada?'
+        : '¿Estás seguro de que quieres marcar esta propiedad como disponible?';
+    
+    if (!confirm(confirmText)) {
+        return;
+    }
+    
+    try {
+        // Primero obtener la propiedad actual para mantener todos los datos
+        const getResponse = await fetch(`../api/properties.php?id=${propertyId}`, {
+            credentials: 'include'
+        });
+        
+        const getData = await getResponse.json();
+        
+        if (!getData.success || !getData.property) {
+            alert('Error al obtener los datos de la propiedad');
+            return;
+        }
+        
+        const property = getData.property;
+        
+        // Actualizar solo el estado
+        const response = await fetch('../api/properties.php', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: property.id,
+                titulo: property.titulo,
+                descripcion: property.descripcion || '',
+                tipo: property.tipo,
+                precio: property.precio,
+                ubicacion: property.ubicacion,
+                direccion: property.direccion || '',
+                habitaciones: property.habitaciones || 0,
+                banos: property.banos || 0,
+                area: property.area || 0,
+                amueblado: property.amueblado || 0,
+                mascotas: property.mascotas || 0,
+                estacionamiento: property.estacionamiento || 0,
+                estado: newStatus
+            }),
+            credentials: 'include'
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            alert(`Propiedad marcada como ${statusText} exitosamente`);
+            await loadUserProperties();
+        } else {
+            alert('Error al cambiar el estado de la propiedad: ' + data.message);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error al cambiar el estado de la propiedad');
     }
 }
 

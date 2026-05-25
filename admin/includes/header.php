@@ -42,6 +42,11 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
                 <li><a href="dashboard.php" <?php echo (basename($_SERVER['PHP_SELF']) == 'dashboard.php') ? 'class="active"' : ''; ?>><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
                 <li><a href="publicar-propiedad.php" <?php echo (basename($_SERVER['PHP_SELF']) == 'publicar-propiedad.php') ? 'class="active"' : ''; ?>><i class="fas fa-plus-circle"></i> Publicar Propiedad</a></li>
                 <li><a href="mis-propiedades.php" <?php echo (basename($_SERVER['PHP_SELF']) == 'mis-propiedades.php') ? 'class="active"' : ''; ?>><i class="fas fa-home"></i> Mis Propiedades</a></li>
+                <li><a href="chat.php" <?php echo (basename($_SERVER['PHP_SELF']) == 'chat.php') ? 'class="active"' : ''; ?>><i class="fas fa-comments"></i> Chat</a></li>
+                <li><a href="arrendamientos.php" <?php echo (basename($_SERVER['PHP_SELF']) == 'arrendamientos.php') ? 'class="active"' : ''; ?>><i class="fas fa-file-contract"></i> Arrendamientos</a></li>
+                <?php if (isset($_SESSION['user_rol']) && $_SESSION['user_rol'] === 'super_admin'): ?>
+                    <li><a href="super-admin.php" <?php echo (basename($_SERVER['PHP_SELF']) == 'super-admin.php') ? 'class="active"' : ''; ?>><i class="fas fa-shield-alt"></i> Super Admin</a></li>
+                <?php endif; ?>
                 <li><a href="configuracion.php" <?php echo (basename($_SERVER['PHP_SELF']) == 'configuracion.php') ? 'class="active"' : ''; ?>><i class="fas fa-cog"></i> Configuración</a></li>
                 <li><a href="../index.php" class="sidebar-external-link"><i class="fas fa-globe"></i> Página Principal</a></li>
             </ul>
