@@ -1,69 +1,189 @@
-import Image from "next/image";
+import Link from "next/link";
+import {
+  ArrowRightIcon,
+  Building2Icon,
+  MessageSquareIcon,
+  SearchIcon,
+  ShieldCheckIcon,
+} from "lucide-react";
 
-export default function Home() {
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  getFeaturedProperties,
+  type PropertyListItem,
+} from "@/modules/properties/service";
+import { PropertyCard } from "@/modules/properties/property-card";
+
+async function loadFeatured(): Promise<PropertyListItem[]> {
+  try {
+    return await getFeaturedProperties(6);
+  } catch (error) {
+    console.error("No fue posible cargar los inmuebles destacados:", error);
+    return [];
+  }
+}
+
+const VALUE_PROPS = [
+  {
+    icon: ShieldCheckIcon,
+    title: "Anunciantes verificados",
+    description:
+      "Publicaciones revisadas y cuentas con historial para reducir el riesgo de fraude.",
+  },
+  {
+    icon: MessageSquareIcon,
+    title: "Contacto directo y privado",
+    description:
+      "Conversa con el propietario dentro de la plataforma, sin exponer tus datos personales.",
+  },
+  {
+    icon: Building2Icon,
+    title: "Enfocado en Quibdó",
+    description:
+      "Un catálogo pensado para el Chocó, con barrios reales y precios en pesos colombianos.",
+  },
+];
+
+export default async function HomePage() {
+  const featured = await loadFeatured();
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <div className="flex flex-1 flex-col">
+      <section className="from-accent/60 to-background border-b bg-linear-to-b">
+        <div className="mx-auto w-full max-w-6xl px-4 py-14 sm:py-20">
+          <div className="max-w-2xl space-y-5">
+            <span className="bg-background text-primary ring-primary/20 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium ring-1">
+              <ShieldCheckIcon className="size-3.5" />
+              Marketplace inmobiliario de Quibdó
+            </span>
+            <h1 className="text-3xl font-semibold tracking-tight text-balance sm:text-4xl lg:text-5xl">
+              Encuentra tu próximo hogar en arriendo, con confianza
+            </h1>
+            <p className="text-muted-foreground text-base sm:text-lg">
+              Explora apartamentos, casas y habitaciones publicadas directamente
+              por sus propietarios en Quibdó y el Chocó.
+            </p>
+
+            <form
+              action="/propiedades"
+              method="get"
+              className="flex flex-col gap-2 sm:flex-row sm:items-center"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+              <Input
+                name="q"
+                placeholder="Barrio, tipo de inmueble o palabra clave"
+                aria-label="Buscar inmuebles"
+                className="bg-background h-11"
+              />
+              <Button type="submit" size="lg" className="h-11">
+                <SearchIcon />
+                Buscar
+              </Button>
+            </form>
+
+            <div className="flex flex-wrap gap-3 pt-2">
+              <Button
+                variant="outline"
+                render={<Link href="/propiedades?type=APARTMENT" />}
+              >
+                Apartamentos
+              </Button>
+              <Button
+                variant="outline"
+                render={<Link href="/propiedades?type=HOUSE" />}
+              >
+                Casas
+              </Button>
+              <Button
+                variant="outline"
+                render={<Link href="/propiedades?type=ROOM" />}
+              >
+                Habitaciones
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto w-full max-w-6xl space-y-6 px-4 py-12">
+        <div className="flex items-end justify-between gap-4">
+          <div className="space-y-1">
+            <h2 className="text-xl font-semibold tracking-tight">
+              Inmuebles recientes
+            </h2>
+            <p className="text-muted-foreground text-sm">
+              Las últimas publicaciones aprobadas y disponibles.
+            </p>
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            render={<Link href="/propiedades" />}
+          >
+            Ver todos
+            <ArrowRightIcon />
+          </Button>
+        </div>
+
+        {featured.length > 0 ? (
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {featured.map((property) => (
+              <PropertyCard key={property.id} property={property} />
+            ))}
+          </div>
+        ) : (
+          <div className="bg-muted/30 rounded-xl border border-dashed px-6 py-12 text-center">
+            <p className="font-medium">Aún no hay inmuebles publicados</p>
+            <p className="text-muted-foreground mt-1 text-sm">
+              Sé el primero en publicar un inmueble en arriendo en Quibdó.
+            </p>
+            <Button
+              className="mt-4"
+              render={<Link href="/panel/inmuebles/nuevo" />}
             >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+              Publicar un inmueble
+            </Button>
+          </div>
+        )}
+      </section>
+
+      <section className="bg-muted/30 border-t">
+        <div className="mx-auto grid w-full max-w-6xl gap-6 px-4 py-12 sm:grid-cols-3">
+          {VALUE_PROPS.map((item) => (
+            <div key={item.title} className="space-y-2">
+              <span className="bg-background text-primary ring-primary/15 flex size-10 items-center justify-center rounded-lg ring-1">
+                <item.icon className="size-5" />
+              </span>
+              <h3 className="font-medium">{item.title}</h3>
+              <p className="text-muted-foreground text-sm">
+                {item.description}
+              </p>
+            </div>
+          ))}
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+      </section>
+
+      <section className="mx-auto w-full max-w-6xl px-4 py-12">
+        <div className="bg-primary text-primary-foreground flex flex-col items-start justify-between gap-4 rounded-xl px-6 py-8 sm:flex-row sm:items-center">
+          <div className="space-y-1">
+            <h2 className="text-lg font-semibold">
+              ¿Tienes un inmueble para arrendar?
+            </h2>
+            <p className="text-primary-foreground/80 text-sm">
+              Publícalo gratis, recibe mensajes de interesados y administra tus
+              visitas.
+            </p>
+          </div>
+          <Button
+            variant="secondary"
+            size="lg"
+            render={<Link href="/panel/inmuebles/nuevo" />}
           >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            Publicar ahora
+          </Button>
         </div>
-      </main>
+      </section>
     </div>
   );
 }

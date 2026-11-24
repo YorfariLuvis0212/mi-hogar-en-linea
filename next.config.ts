@@ -1,9 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  cacheComponents: true,
-  partialPrefetching: true,
+  images: {
+    // Las fotografías de los inmuebles las aportan los anunciantes como URL
+    // externas; se permiten hosts https arbitrarios.
+    remotePatterns: [{ protocol: "https", hostname: "**" }],
+  },
   turbopack: {
     rules: {
       "*.css": {

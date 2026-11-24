@@ -1,36 +1,61 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Mi Hogar en Línea
 
-## Getting Started
+Marketplace inmobiliario de arrendamiento con mercado inicial en Quibdó, Chocó (Colombia).
+Publicación directa por propietarios, mensajería interna privada, visitas, favoritos y
+paneles de gestión.
 
-First, run the development server:
+> Reconstrucción moderna del sistema anterior (PHP/MySQL), que se conserva únicamente como
+> referencia funcional. El contexto técnico vigente está en [docs/AGENTS.md](./docs/AGENTS.md)
+> y el historial de cambios en [docs/BITACORA.md](./docs/BITACORA.md).
+
+## Stack
+
+Next.js 16 · React 19 · TypeScript · Tailwind CSS 4 · shadcn/ui · Prisma 7 ·
+PostgreSQL (Neon) · better-auth · Zod · Vitest · Vercel. Gestor de paquetes: **pnpm**.
+
+## Puesta en marcha
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
+cp .env.example .env      # completa DATABASE_URL y BETTER_AUTH_SECRET
+pnpm db:generate
+pnpm db:migrate           # aplica las migraciones en la base local
+pnpm db:seed              # datos sintéticos (no se ejecuta en producción)
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+La aplicación queda disponible en http://localhost:3000.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Comando                       | Descripción                          |
+| ----------------------------- | ------------------------------------ |
+| `pnpm dev`                    | Servidor de desarrollo               |
+| `pnpm build`                  | Build de producción                  |
+| `pnpm start`                  | Servidor de producción               |
+| `pnpm lint`                   | ESLint                               |
+| `pnpm typecheck`              | Validación de tipos (`tsc --noEmit`) |
+| `pnpm test` / `pnpm test:run` | Pruebas (watch / una vez)            |
+| `pnpm format`                 | Formateo con Prettier                |
+| `pnpm db:generate`            | Genera el cliente de Prisma          |
+| `pnpm db:migrate`             | Migraciones en desarrollo            |
+| `pnpm db:deploy`              | Aplica migraciones (entornos)        |
+| `pnpm db:seed`                | Datos de ejemplo                     |
 
-## Learn More
+## Estructura
 
-To learn more about Next.js, take a look at the following resources:
+```
+src/app/         Rutas (App Router)
+src/components/  Componentes compartidos (ui, layout, forms)
+src/lib/         Infraestructura (env, prisma, auth, form, format)
+src/modules/     Dominios funcionales (identity, properties, messaging, visits, favorites, notifications, audit)
+prisma/          Esquema, migraciones y seed
+docs/            Contexto (AGENTS.md) y bitácora (BITACORA.md)
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Contribución
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Trabaja en ramas cortas por issue: `feat/mh-123-descripcion`, `fix/...`, `chore/...`, `docs/...`.
+- Antes de abrir un PR, ejecuta `pnpm lint`, `pnpm typecheck`, `pnpm test:run` y `pnpm build`.
+- Cada PR requiere revisión de otro desarrollador y CI en verde.
+- No incluyas secretos, credenciales ni datos personales.
