@@ -421,6 +421,51 @@ mostrará el monorepo como agregado y el código legacy como eliminado.
 
 Documenta la operación aprobada por el usuario para desbloquear la PR.
 
+### 2026-11-24 — INIT-011 Corrección del build en CI: variables de entorno en `turbo.json`
+
+- Tipo: `fix`, `ci`.
+- Dominio: Repositorio y CI/CD.
+- Responsable: Equipo — inicialización.
+- Referencia: rama `feat/reconstruccion-nextjs`.
+- Estado: Integrado; validado localmente.
+
+#### Objetivo
+
+Corregir el fallo de `pnpm build` en GitHub Actions:
+
+```text
+Error: Failed to collect configuration for /api/auth/[...all]
+[cause]: Error: La variable de entorno DATABASE_URL no está definida.
+      at <unknown> (../../packages/database/src/client.ts:19:11)
+```
+
+#### Causa
+
+Turborepo 2.11 ejecuta las tareas en **modo de entorno estricto** (por defecto desde
+Turbo 2.x): cada tarea solo recibe las variables declaradas en `turbo.json`. Aunque el
+workflow de CI define `DATABASE_URL`, `next build` no la veía al recolectar los datos de
+la ruta `/api/auth/[...all]` → `@/lib/auth` → `@mh/database`. En local no se reproducía
+porque `apps/web/.env` la aportaba directamente a Next.js.
+
+#### Cambios realizados
+
+- `turbo.json`: nuevo bloque `globalEnv` con `DATABASE_URL`, `BETTER_AUTH_SECRET`,
+  `BETTER_AUTH_URL`, `NEXT_PUBLIC_APP_URL` y `WEB_ORIGIN`, para que todas las tareas las
+  reciban.
+
+#### Validación
+
+| Verificación                     | Resultado | Evidencia              |
+| -------------------------------- | --------- | ---------------------- |
+| `pnpm build` sin `apps/web/.env` | PASS      | 4/4 tareas; 16 páginas |
+
+#### Decisiones y documentación
+
+La verificación se hizo ocultando `apps/web/.env` y exportando las variables solo en el
+entorno del proceso, replicando las condiciones de CI. El error `P1000` de Prisma que
+aparece durante el build es no fatal y se tolera cuando la base de datos no está
+disponible.
+
 ## 5. Pendientes conocidos (sin registrar como terminados)
 
 - Panel de administración y moderación, reportes y bloqueos.
