@@ -9,6 +9,14 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  # Valores de CI: no apuntan a servicios reales.
+  DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/ci?sslmode=disable"
+  BETTER_AUTH_SECRET: "ci-secret-cadena-suficientemente-larga-000000000000"
+  BETTER_AUTH_URL: "http://localhost:3000"
+  NEXT_PUBLIC_APP_URL: "http://localhost:3000"
+  WEB_ORIGIN: "http://localhost:3000"
+
 jobs:
   quality:
     name: Lint, tipos, pruebas y build
@@ -43,9 +51,3 @@ jobs:
 
       - name: Build
         run: pnpm build
-        env:
-          # Valores de CI: no apuntan a servicios reales.
-          DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/ci?sslmode=disable"
-          BETTER_AUTH_SECRET: "ci-secret-cadena-suficientemente-larga-000000000000"
-          BETTER_AUTH_URL: "http://localhost:3000"
-          NEXT_PUBLIC_APP_URL: "http://localhost:3000"
