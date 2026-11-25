@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historias de Usuario - MI HOGAR EN LINEA</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 20mm 18mm 22mm 18mm;
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Calibri', 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.55;
+            color: #1a202c;
+            font-size: 11pt;
+        }
+        .portada {
+            min-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            page-break-after: always;
+            break-after: page;
+            padding: 40px 24px;
+        }
+        .portada h1 {
+            margin-bottom: 12px;
+        }
+        .portada .subtitulo {
+            color: #718096;
+            margin: 0 0 8px;
+            font-size: 14pt;
+            font-weight: normal;
+        }
+        .portada .version {
+            color: #718096;
+            margin: 0;
+            font-size: 11pt;
+        }
+        h1 {
+            color: #1a3a5f;
+            text-align: center;
+            border-bottom: 3px solid #1a3a5f;
+            padding-bottom: 10px;
+            font-size: 22pt;
+            page-break-after: avoid;
+        }
+        h2.subtitulo-doc {
+            color: #2c5282;
+            margin-top: 0;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 14pt;
+            font-weight: normal;
+        }
+        .contenido {
+            padding: 8px 24px 32px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0 0 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+        th {
+            background-color: #1a3a5f;
+            color: white;
+            padding: 10px 12px;
+            text-align: left;
+            font-weight: bold;
+            width: 28%;
+            font-size: 10.5pt;
+        }
+        td {
+            padding: 10px 12px;
+            border: 1px solid #cbd5e0;
+            vertical-align: top;
+            font-size: 10.5pt;
+        }
+        tr:nth-child(even) td {
+            background-color: #f7fafc;
+        }
+        .hu-number {
+            font-weight: bold;
+            color: #1a3a5f;
+            font-size: 1.05em;
+        }
+        .priority-high { color: #e53e3e; font-weight: bold; }
+        .priority-medium { color: #d69e2e; font-weight: bold; }
+        .priority-low { color: #38a169; font-weight: bold; }
+        .section-title {
+            background-color: #2c5282;
+            color: white;
+            padding: 14px 18px;
+            margin: 0 0 16px;
+            font-size: 13pt;
+            font-weight: bold;
+            page-break-before: always;
+            break-before: page;
+            page-break-after: avoid;
+            break-after: avoid;
+        }
+        .section-title:first-of-type {
+            page-break-before: auto;
+            break-before: auto;
+        }
+        .historia {
+            page-break-inside: avoid;
+            break-inside: avoid-page;
+            margin-bottom: 20px;
+            padding-bottom: 4px;
+        }
+        .historia + .historia {
+            page-break-before: always;
+            break-before: page;
+            padding-top: 4px;
+        }
+        .section-title + .historia {
+            page-break-before: auto;
+            break-before: auto;
+        }
+        ul { margin: 6px 0; padding-left: 20px; }
+        li { margin: 4px 0; }
+        .bloque-arquitectura {
+            page-break-before: always;
+            break-before: page;
+            padding: 0 24px 20px;
+        }
+        .bloque-arquitectura .section-title.arquitectura {
+            page-break-before: auto;
+            break-before: auto;
+        }
+        .bloque-arquitectura table {
+            page-break-inside: avoid;
+            break-inside: avoid-page;
+        }
+        .bloque-final {
+            page-break-before: always;
+            break-before: page;
+            margin-top: 0;
+            padding: 24px;
+            background-color: #f7fafc;
+            border-left: 4px solid #1a3a5f;
+        }
+        .bloque-final h2 {
+            color: #1a3a5f;
+            margin-top: 0;
+            font-size: 14pt;
+        }
+        .pie-doc {
+            text-align: center;
+            color: #718096;
+            font-size: 9.5pt;
+            padding: 16px 24px 32px;
+        }
+        .pie-doc {
+            text-align: center;
+            color: #718096;
+            font-size: 9.5pt;
+            margin-top: 24px;
+            padding-top: 16px;
+            border-top: 1px solid #e2e8f0;
+        }
+        @media print {
+            body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .section-title, th { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        }
+    </style>
+</head>
+<body>
+    <div class="portada">
+        <h1>HISTORIAS DE USUARIO</h1>
+        <h2 class="subtitulo-doc">MI HOGAR EN LINEA</h2>
+        <p class="version">Documento de Requerimientos — Versión 2.0 (Mayo 2026)</p>
+    </div>
+
+    <div class="contenido">
+    <div class="section-title">🔐 AUTENTICACIÓN Y REGISTRO</div>
+
+    <!-- HU-001 -->
+    <div class="historia"><table>
+        <tr>
+            <th>ID</th>
+            <td class="hu-number">HU-001</td>
+        </tr>
+        <tr>
+            <th>Título</th>
+            <td>Registro de Usuario</td>
+        </tr>
+        <tr>
+            <th>Como</th>
+            <td>usuario nuevo</td>
+        </tr>
+        <tr>
+            <th>Quiero</th>
+            <td>registrarme en la plataforma</td>
+        </tr>
+        <tr>
+            <th>Para</th>
+            <td>poder publicar y buscar propiedades</td>
+        </tr>
+        <tr>
+            <th>Criterios de Aceptación</th>
+            <td>
+                <ul>
+                    <li>Debo poder acceder al formulario de registro desde la página principal</li>
+                    <li>El formulario debe incluir: nombre, email, teléfono, WhatsApp y contraseña</li>
+                    <li>Debo recibir validación en tiempo real de los campos</li>
+                    <li>Al completar el registro exitosamente, debo ser redirigido al dashboard</li>
+                    <li>Si hay errores, debo ver mensajes claros</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <th>Prioridad</th>
+            <td class="priority-high">Alta</td>
+        </tr>
+        <tr>
+            <th>Estimación</th>
+            <td>3 puntos</td>
+        </tr>
+    </table>
+
+    <!-- HU-002 -->
+    <table>
+        <tr>
+            <th>ID</th>
+            <td class="hu-number">HU-002</td>
+        </tr>
+        <tr>
+            <th>Título</th>
+            <td>Inicio de Sesión</td>
+        </tr>
+        <tr>
+            <th>Como</th>
+            <td>usuario registrado</td>
+        </tr>
+        <tr>
+            <th>Quiero</th>
+            <td>iniciar sesión en la plataforma</td>
+        </tr>
+        <tr>
+            <th>Para</th>
+            <td>acceder a mi cuenta y gestionar mis propiedades</td>
+        </tr>
+        <tr>
+            <th>Criterios de Aceptación</th>
+            <td>
+                <ul>
+                    <li>Debo poder acceder al formulario de login desde la página principal</li>
+                    <li>Debo poder iniciar sesión con mi email y contraseña</li>
+                    <li>Si las credenciales son incorrectas, debo ver un mensaje de error</li>
+                    <li>Al iniciar sesión exitosamente, debo ser redirigido al dashboard</li>
+                    <li>Debo poder acceder a la página principal estando logueado</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <th>Prioridad</th>
+            <td class="priority-high">Alta</td>
+        </tr>
+        <tr>
+            <th>Estimación</th>
+            <td>2 puntos</td>
+        </tr>
+    </table>
+
+    <!-- HU-003 -->
+    <table>
+        <tr>
+            <th>ID</th>
+            <td class="hu-number">HU-003</td>
+        </tr>
+        <tr>
+            <th>Título</th>
+            <td>Cerrar Sesión</td>
+        </tr>
+        <tr>
+            <th>Como</th>
+            <td>usuario autenticado</td>
+        </tr>
+        <tr>
+            <th>Quiero</th>
+            <td>cerrar sesión</td>
+        </tr>
+        <tr>
+            <th>Para</th>
+            <td>proteger mi cuenta cuando termine de usarla</td>
+        </tr>
+        <tr>
+            <th>Criterios de Aceptación</th>
+            <td>
+                <ul>
+                    <li>Debo poder cerrar sesión desde el dashboard</li>
+                    <li>Al cerrar sesión, debo ser redirigido a la página principal</li>
+                    <li>No debo poder acceder al dashboard sin autenticación</li>
+                    <li>La sesión debe cerrarse correctamente</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <th>Prioridad</th>
+            <td class="priority-medium">Media</td>
+        </tr>
+        <tr>
+            <th>Estimación</th>
+            <td>1 punto</td>
+        </tr>
+    </table>
+
+    <!-- HU-004 -->
+    <table>
+        <tr>
+            <th>ID</th>
+            <td class="hu-number">HU-004</td>
+        </tr>
+        <tr>
+            <th>Título</th>
+            <td>Seguridad de Sesión Única</td>
+        </tr>
+        <tr>
+            <th>Como</th>
+            <td>usuario autenticado</td>
+        </tr>
+        <tr>
+            <th>Quiero</th>
+            <td>que solo una pestaña del dashboard esté activa</td>
+        </tr>
+        <tr>
+            <th>Para</th>
+            <td>evitar conflictos de sesión</td>
+        </tr>
+        <tr>
+            <th>Criterios de Aceptación</th>
+            <td>
+                <ul>
+                    <li>Si abro el dashboard en una nueva pestaña, la nueva pestaña debe cerrar la sesión</li>
+                    <li>La pestaña original debe mantenerse activa</li>
+                    <li>Debo ver una notificación cuando se cierra la sesión en una nueva pestaña</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <th>Prioridad</th>
+            <td class="priority-medium">Media</td>
+        </tr>
+        <tr>
+            <th>Estimación</th>
+            <td>5 puntos</td>
+        </tr>
+    </table>
+
+    <div class="section-title">🏠 GESTIÓN DE PROPIEDADES</div>
+
+    <!-- HU-005 -->
+    <table>
+        <tr>
+            <th>ID</th>
+            <td class="hu-number">HU-005</td>
+        </tr>
+        <tr>
+            <th>Título</th>
+            <td>Publicar Nueva Propiedad</td>
+        </tr>
+        <tr>
+            <th>Como</th>
+            <td>usuario autenticado</td>
+        </tr>
+        <tr>
+            <th>Quiero</th>
+            <td>publicar una nueva propiedad</td>
+        </tr>
+        <tr>
+            <th>Para</th>
+            <td>que otros usuarios puedan encontrarla y contactarme</td>
+        </tr>
+        <tr>
+            <th>Criterios de Aceptación</th>
+            <td>
+                <ul>
+                    <li>Debo poder acceder al formulario de publicación desde el dashboard</li>
+                    <li>El formulario debe incluir: título, tipo, precio, ubicación, dirección, habitaciones, baños, área, características (amueblado, mascotas, estacionamiento) y descripción</li>
+                    <li>Debo poder subir múltiples imágenes de la propiedad</li>
+                    <li>Debo poder subir videos de la propiedad (además de imágenes)</li>
+                    <li>La primera imagen subida debe establecerse como imagen principal automáticamente</li>
+                    <li>Debo poder ver una vista previa de las imágenes antes de publicar</li>
+                    <li>Al publicar exitosamente, debo ver un mensaje de confirmación</li>
+                    <li>La propiedad debe aparecer en mi lista de propiedades</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <th>Prioridad</th>
+            <td class="priority-high">Alta</td>
+        </tr>
+        <tr>
+            <th>Estimación</th>
+            <td>8 puntos</td>
+        </tr>
+    </table>
+
+    <!-- HU-006 -->
+    <table>
+        <tr>
+            <th>ID</th>
+            <td class="hu-number">HU-006</td>
+        </tr>
+        <tr>
+            <th>Título</th>
+            <td>Ver Mis Propiedades</td>
+        </tr>
+        <tr>
+            <th>Como</th>
+            <td>usuario autenticado</td>
+        </tr>
+        <tr>
+            <th>Quiero</th>
+            <td>ver todas mis propiedades publicadas</td>
+        </tr>
+        <tr>
+            <th>Para</th>
+            <td>gestionarlas y ver su estado</td>
+        </tr>
+        <tr>
+            <th>Criterios de Aceptación</th>
+            <td>
+                <ul>
+                    <li>Debo poder ver todas mis propiedades en el dashboard</li>
+                    <li>Cada propiedad debe mostrar: imagen principal, precio, título, ubicación, características y número de mensajes recibidos</li>
+                    <li>Debo poder ver el estado de cada propiedad (disponible/arrendada)</li>
+                    <li>Las propiedades deben estar ordenadas por fecha de publicación (más recientes primero)</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <th>Prioridad</th>
+            <td class="priority-high">Alta</td>
+        </tr>
+        <tr>
+            <th>Estimación</th>
+            <td>3 puntos</td>
+        </tr>
+    </table>
+
+    <!-- HU-007 -->
+    <table>
+        <tr>
+            <th>ID</th>
+            <td class="hu-number">HU-007</td>
+        </tr>
+        <tr>
+            <th>Título</th>
+            <td>Editar Propiedad</td>
+        </tr>
+        <tr>
+            <th>Como</th>
+            <td>propietario</td>
+        </tr>
+        <tr>
+            <th>Quiero</th>
+            <td>editar los datos de mi propiedad</td>
+        </tr>
+        <tr>
+            <th>Para</th>
+            <td>actualizar información o corregir errores</td>
+        </tr>
+        <tr>
+            <th>Criterios de Aceptación</th>
+            <td>
+                <ul>
+                    <li>Debo poder hacer clic en el botón "Editar" de cualquier propiedad</li>
+                    <li>El formulario debe cargarse con todos los datos actuales de la propiedad</li>
+                    <li>Debo poder modificar cualquier campo de la propiedad</li>
+                    <li>Debo poder ver todas las imágenes existentes de la propiedad</li>
+                    <li>Debo poder agregar nuevas imágenes además de las existentes</li>
+                    <li>Al guardar los cambios, debo ver un mensaje de confirmación</li>
+                    <li>Los cambios deben reflejarse inmediatamente en la lista de propiedades</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <th>Prioridad</th>
+            <td class="priority-high">Alta</td>
+        </tr>
+        <tr>
+            <th>Estimación</th>
+            <td>8 puntos</td>
+        </tr>
+    </table>
+
+    <!-- HU-008 -->
+    <table>
+        <tr>
+            <th>ID</th>
+            <td class="hu-number">HU-008</td>
+        </tr>
+        <tr>
+            <th>Título</th>
+            <td>Gestionar Imágenes de Propiedad</td>
+        </tr>
+        <tr>
+            <th>Como</th>
+            <td>propietario</td>
+        </tr>
+        <tr>
+            <th>Quiero</th>
+            <td>gestionar las imágenes de mi propiedad</td>
+        </tr>
+        <tr>
+            <th>Para</th>
+            <td>mantener una galería actualizada y atractiva</td>
+        </tr>
+        <tr>
+            <th>Criterios de Aceptación</th>
+            <td>
+                <ul>
+                    <li>Al editar una propiedad, debo ver todas las imágenes existentes en una cuadrícula</li>
+                    <li>Debo poder eliminar cualquier imagen (excepto si es la única)</li>
+                    <li>Debo poder establecer cualquier imagen como imagen principal</li>
+                    <li>La imagen principal debe tener un badge visible</li>
+                    <li>Al eliminar una imagen, debo confirmar la acción</li>
+                    <li>Las imágenes eliminadas deben borrarse tanto de la base de datos como del servidor</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <th>Prioridad</th>
+            <td class="priority-high">Alta</td>
+        </tr>
+        <tr>
+            <th>Estimación</th>
+            <td>5 puntos</td>
+        </tr>
+    </table>
+
+    <!-- HU-009 -->
+    <table>
+        <tr>
+            <th>ID</th>
+            <td class="hu-number">HU-009</td>
+        </tr>
+        <tr>
+            <th>Título</th>
+            <td>Eliminar Propiedad</td>
+        </tr>
+        <tr>
+            <th>Como</th>
+            <td>propietario</td>
+        </tr>
+        <tr>
+            <th>Quiero</th>
+            <td>eliminar una propiedad</td>
+        </tr>
+        <tr>
+            <th>Para</th>
+            <td>removerla de la plataforma cuando ya no esté disponible</td>
+        </tr>
+        <tr>
+            <th>Criterios de Aceptación</th>
+            <td>
+                <ul>
+                    <li>Debo poder hacer clic en el botón "Eliminar" de cualquier propiedad</li>
+                    <li>Debo recibir una confirmación antes de eliminar</li>
+                    <li>Al confirmar, la propiedad debe eliminarse permanentemente</li>
+                    <li>Debo ver un mensaje de confirmación después de eliminar</li>
+                    <li>La propiedad debe desaparecer de mi lista inmediatamente</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <th>Prioridad</th>
+            <td class="priority-medium">Media</td>
+        </tr>
+        <tr>
+            <th>Estimación</th>
+            <td>3 puntos</td>
+        </tr>
+    </table>
+
+    <!-- HU-010 -->
+    <table>
+        <tr>
+            <th>ID</th>
+            <td class="hu-number">HU-010</td>
+        </tr>
+        <tr>
+            <th>Título</th>
+            <td>Ver Propiedades Destacadas</td>
+        </tr>
+        <tr>
+            <th>Como</th>
+            <td>visitante o usuario</td>
+        </tr>
+        <tr>
+            <th>Quiero</th>
+            <td>ver las propiedades destacadas en la página principal</td>
+        </tr>
+        <tr>
+            <th>Para</th>
+            <td>descubrir las mejores opciones disponibles</td>
+        </tr>
+        <tr>
+            <th>Criterios de Aceptación</th>
+            <td>
+                <ul>
+                    <li>Debo ver las 3 primeras propiedades publicadas en la página principal</li>
+                    <li>Cada propiedad debe mostrar: imagen, precio, título, ubicación y características principales</li>
+                    <li>Debo poder hacer clic en "Ver Detalles" para ver más información</li>
+                    <li>Si no hay propiedades, debo ver un mensaje informativo</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <th>Prioridad</th>
+            <td class="priority-high">Alta</td>
+        </tr>
+        <tr>
+            <th>Estimación</th>
+            <td>3 puntos</td>
+        </tr>
+    </table>
+
+    <div class="section-title">🔍 BÚSQUEDA Y FILTRADO</div>
+
+    <!-- HU-011 -->
+    <table>
+        <tr>
+            <th>ID</th>
+            <td class="hu-number">HU-011</td>
+        </tr>
+        <tr>
+            <th>Título</th>
+            <td>Buscar Propiedades</td>
+        </tr>
+        <tr>
+            <th>Como</th>
+            <td>usuario o visitante</td>
+        </tr>
+        <tr>
+            <th>Quiero</th>
+            <td>buscar propiedades usando filtros</td>
+        </tr>
+        <tr>
+            <th>Para</th>
+            <td>encontrar la vivienda que mejor se adapte a mis necesidades</td>
+        </tr>
+        <tr>
+            <th>Criterios de Aceptación</th>
+            <td>
+                <ul>
+                    <li>Debo poder buscar desde la página principal usando el formulario de búsqueda</li>
+                    <li>Debo poder filtrar por: ubicación (ciudad), tipo de propiedad, precio mínimo y precio máximo</li>
+                    <li>Los filtros deben mantenerse después de realizar la búsqueda</li>
+                    <li>Al hacer clic en "Buscar Propiedades", debo ser redirigido a la página de resultados</li>
+                    <li>Los resultados deben mostrar solo las propiedades que coincidan con los filtros</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <th>Prioridad</th>
+            <td class="priority-high">Alta</td>
+        </tr>
+        <tr>
+            <th>Estimación</th>
+            <td>5 puntos</td>
+        </tr>
+    </table>
+
+    <!-- HU-012 -->
+    <table>
+        <tr>
+            <th>ID</th>
+            <td class="hu-number">HU-012</td>
+        </tr>
+        <tr>
+            <th>Título</th>
+            <td>Ver Todas las Propiedades</td>
+        </tr>
+        <tr>
+            <th>Como</th>
+            <td>usuario o visitante</td>
+        </tr>
+        <tr>
+            <th>Quiero</th>
+            <td>ver todas las propiedades disponibles</td>
+        </tr>
+        <tr>
+            <th>Para</th>
+            <td>explorar todas las opciones sin filtros</td>
+        </tr>
+        <tr>
+            <th>Criterios de Aceptación</th>
+            <td>
+                <ul>
+                    <li>Debo poder acceder a la página de todas las propiedades desde el menú</li>
+                    <li>Debo ver todas las propiedades disponibles en formato de cuadrícula</li>
+                    <li>Cada propiedad debe mostrar su información básica</li>
+                    <li>Debo poder hacer clic en cualquier propiedad para ver sus detalles</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <th>Prioridad</th>
+            <td class="priority-high">Alta</td>
+        </tr>
+        <tr>
+            <th>Estimación</th>
+            <td>2 puntos</td>
+        </tr>
+    </table>
+
+    <!-- HU-013 -->
+    <table>
+        <tr>
+            <th>ID</th>
+            <td class="hu-number">HU-013</td>
+        </tr>
+        <tr>
+            <th>Título</th>
+            <td>Filtrar Propiedades en Listado</td>
+        </tr>
+        <tr>
+            <th>Como</th>
+            <td>usuario o visitante</td>
+        </tr>
+        <tr>
+            <th>Quiero</th>
+            <td>aplicar filtros en la página de propiedades</td>
+        </tr>
+        <tr>
+            <th>Para</th>
+            <td>refinar mi búsqueda</td>
+        </tr>
+        <tr>
+            <th>Criterios de Aceptación</th>
+            <td>
+                <ul>
+                    <li>Debo poder filtrar por tipo de propiedad</li>
+                    <li>Debo poder filtrar por rango de precio (mínimo y máximo)</li>
+                    <li>Debo poder filtrar por número de habitaciones</li>
+                    <li>Debo poder filtrar por ciudad/ubicación</li>
+                    <li>Debo poder limpiar todos los filtros con un botón</li>
+                    <li>Los filtros seleccionados deben mantenerse visibles</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <th>Prioridad</th>
+            <td class="priority-high">Alta</td>
+        </tr>
+        <tr>
+            <th>Estimación</th>
+            <td>5 puntos</td>
+        </tr>
+    </table>
+
+    <!-- HU-014 -->
+    <table>
+        <tr>
+            <th>ID</th>
+            <td class="hu-number">HU-014</td>
+        </tr>
+        <tr>
+            <th>Título</th>
+            <td>Ver Detalles de Propiedad</td>
+        </tr>
+        <tr>
+            <th>Como</th>
+            <td>usuario o visitante</td>
+        </tr>
+        <tr>
+            <th>Quiero</th>
+            <td>ver los detalles completos de una propiedad</td>
+        </tr>
+        <tr>
+            <th>Para</th>
+            <td>tomar una decisión informada</td>
+        </tr>
+        <tr>
+            <th>Criterios de Aceptación</th>
+            <td>
+                <ul>
+                    <li>Debo poder acceder a los detalles desde cualquier tarjeta de propiedad</li>
+                    <li>Debo ver una galería con todas las imágenes de la propiedad</li>
+                    <li>Debo ver toda la información: precio, ubicación, características, descripción completa</li>
+                    <li>Debo ver la información de contacto del propietario</li>
+                    <li>Debo poder contactar al propietario directamente por WhatsApp</li>
+                    <li>Si la propiedad tiene videos, debo verlos en un reproductor con miniaturas</li>
+                    <li>El sistema debe registrar las visualizaciones de la propiedad</li>
+                    <li>Si estoy autenticado, debo poder iniciar una conversación en la plataforma desde esta página</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <th>Prioridad</th>
+            <td class="priority-high">Alta</td>
+        </tr>
+        <tr>
+            <th>Estimación</th>
+            <td>5 puntos</td>
+        </tr>
+    </table>
+
+    <div class="section-title">💬 COMUNICACIÓN</div>
+
+    <!-- HU-015 -->
+    <table>
+        <tr>
+            <th>ID</th>
+            <td class="hu-number">HU-015</td>
+        </tr>
+        <tr>
+            <th>Título</th>
+            <td>Contactar Propietario por WhatsApp</td>
+        </tr>
+        <tr>
+            <th>Como</th>
+            <td>usuario interesado en una propiedad</td>
+        </tr>
+        <tr>
+            <th>Quiero</th>
+            <td>contactar al propietario directamente por WhatsApp</td>
+        </tr>
+        <tr>
+            <th>Para</th>
+            <td>hacer consultas rápidas y eficientes</td>
+        </tr>
+        <tr>
+            <th>Criterios de Aceptación</th>
+            <td>
+                <ul>
+                    <li>Debo ver un botón de WhatsApp en la página de detalles de la propiedad</li>
+                    <li>Al hacer clic, debo abrir WhatsApp con un mensaje prellenado</li>
+                    <li>El mensaje debe incluir información básica de la propiedad</li>
+                    <li>Debo poder iniciar la conversación directamente</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <th>Prioridad</th>
+            <td class="priority-high">Alta</td>
+        </tr>
+        <tr>
+            <th>Estimación</th>
+            <td>3 puntos</td>
+        </tr>
+    </table>
+
+    <!-- HU-016 -->
+    <table>
+        <tr>
+            <th>ID</th>
+            <td class="hu-number">HU-016</td>
+        </tr>
+        <tr>
+            <th>Título</th>
+            <td>Ver Mensajes Recibidos</td>
+        </tr>
+        <tr>
+            <th>Como</th>
+            <td>propietario</td>
+        </tr>
+        <tr>
+            <th>Quiero</th>
+            <td>ver los mensajes que he recibido sobre mis propiedades</td>
+        </tr>
+        <tr>
+            <th>Para</th>
+            <td>responder a los interesados</td>
+        </tr>
+        <tr>
+            <th>Criterios de Aceptación</th>
+            <td>
+                <ul>
+                    <li>Debo poder acceder a la sección de mensajes desde el dashboard</li>
+                    <li>Debo ver todos los mensajes organizados por propiedad</li>
+                    <li>Debo poder ver: nombre del remitente, email, teléfono, mensaje y fecha</li>
+                    <li>Los mensajes no leídos deben estar destacados</li>
+                    <li>Debo poder marcar mensajes como leídos</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <th>Prioridad</th>
+            <td class="priority-medium">Media</td>
+        </tr>
+        <tr>
+            <th>Estimación</th>
+            <td>5 puntos</td>
+        </tr>
+    </table>
+
+    <div class="section-title">👤 PERFIL Y CONFIGURACIÓN</div>
+
+    <!-- HU-017 -->
+    <table>
+        <tr>
+            <th>ID</th>
+            <td class="hu-number">HU-017</td>
+        </tr>
+        <tr>
+            <th>Título</th>
+            <td>Ver Mi Perfil</td>
+        </tr>
+        <tr>
+            <th>Como</th>
+            <td>usuario autenticado</td>
+        </tr>
+        <tr>
+            <th>Quiero</th>
+            <td>ver mi información de perfil</td>
+        </tr>
+        <tr>
+            <th>Para</th>
+            <td>revisar mis datos personales</td>
+        </tr>
+        <tr>
+            <th>Criterios de Aceptación</th>
+            <td>
+                <ul>
+                    <li>Debo poder acceder a la sección de configuración desde el dashboard</li>
+                    <li>Debo ver mi información: nombre, email, teléfono y WhatsApp</li>
+                    <li>La información debe estar en un formulario editable</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <th>Prioridad</th>
+            <td class="priority-medium">Media</td>
+        </tr>
+        <tr>
+            <th>Estimación</th>
+            <td>2 puntos</td>
+        </tr>
+    </table>
+
+    <!-- HU-018 -->
+    <table>
+        <tr>
+            <th>ID</th>
+            <td class="hu-number">HU-018</td>
+        </tr>
+        <tr>
+            <th>Título</th>
+            <td>Actualizar Mi Perfil</td>
+        </tr>
+        <tr>
+            <th>Como</th>
+            <td>usuario autenticado</td>
+        </tr>
+        <tr>
+            <th>Quiero</th>
+            <td>actualizar mi información personal</td>
+        </tr>
+        <tr>
+            <th>Para</th>
+            <td>mantener mis datos actualizados</td>
+        </tr>
+        <tr>
+            <th>Criterios de Aceptación</th>
+            <td>
+                <ul>
+                    <li>Debo poder modificar: nombre, email, teléfono y WhatsApp</li>
+                    <li>Debo poder cambiar mi contraseña (opcional)</li>
+                    <li>Al guardar, debo ver un mensaje de confirmación</li>
+                    <li>Los cambios deben guardarse correctamente</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <th>Prioridad</th>
+            <td class="priority-medium">Media</td>
+        </tr>
+        <tr>
+            <th>Estimación</th>
+            <td>3 puntos</td>
+        </tr>
+    </table>
+
+    <!-- HU-019 -->
+    <table>
+        <tr>
+            <th>ID</th>
+            <td class="hu-number">HU-019</td>
+        </tr>
+        <tr>
+            <th>Título</th>
+            <td>Ver Estadísticas del Dashboard</td>
+        </tr>
+        <tr>
+            <th>Como</th>
+            <td>propietario</td>
+        </tr>
+        <tr>
+            <th>Quiero</th>
+            <td>ver estadísticas de mis propiedades</td>
+        </tr>
+        <tr>
+            <th>Para</th>
+            <td>conocer el rendimiento de mis publicaciones</td>
+        </tr>
+        <tr>
+            <th>Criterios de Aceptación</th>
+            <td>
+                <ul>
+                    <li>Debo ver el número total de propiedades publicadas</li>
+                    <li>Debo ver el número total de mensajes recibidos</li>
+                    <li>Debo ver estadísticas visuales en el dashboard principal</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <th>Prioridad</th>
+            <td class="priority-low">Baja</td>
+        </tr>
+        <tr>
+            <th>Estimación</th>
+            <td>3 puntos</td>
+        </tr>
+    </table>
+
+    <div class="section-title">ℹ️ INFORMACIÓN Y CONTACTO</div>
+
+    <!-- HU-020 -->
+    <table>
+        <tr>
+            <th>ID</th>
+            <td class="hu-number">HU-020</td>
+        </tr>
+        <tr>
+            <th>Título</th>
+            <td>Ver Información de la Empresa</td>
+        </tr>
+        <tr>
+            <th>Como</th>
+            <td>visitante o usuario</td>
+        </tr>
+        <tr>
+            <th>Quiero</th>
+            <td>conocer más sobre la plataforma</td>
+        </tr>
+        <tr>
+            <th>Para</th>
+            <td>entender los valores y servicios ofrecidos</td>
+        </tr>
+        <tr>
+            <th>Criterios de Aceptación</th>
+            <td>
+                <ul>
+                    <li>Debo poder acceder a "Sobre Nosotros" desde el menú</li>
+                    <li>Debo ver información sobre la historia de la empresa</li>
+                    <li>Debo ver la misión y visión</li>
+                    <li>Debo ver los valores de la empresa</li>
+                    <li>Debo ver estadísticas de la plataforma</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <th>Prioridad</th>
+            <td class="priority-low">Baja</td>
+        </tr>
+        <tr>
+            <th>Estimación</th>
+            <td>3 puntos</td>
+        </tr>
+    </table>
+
+    <!-- HU-021 -->
+    <table>
+        <tr>
+            <th>ID</th>
+            <td class="hu-number">HU-021</td>
+        </tr>
+        <tr>
+            <th>Título</th>
+            <td>Contactar a la Plataforma</td>
+        </tr>
+        <tr>
+            <th>Como</th>
+            <td>visitante o usuario</td>
+        </tr>
+        <tr>
+            <th>Quiero</th>
+            <td>enviar un mensaje a la plataforma</td>
+        </tr>
+        <tr>
+            <th>Para</th>
+            <td>hacer consultas, reportar problemas o dar sugerencias</td>
+        </tr>
+        <tr>
+            <th>Criterios de Aceptación</th>
+            <td>
+                <ul>
+                    <li>Debo poder acceder a "Contáctanos" desde el menú</li>
+                    <li>Debo ver un formulario de contacto con campos: nombre, email, teléfono, asunto y mensaje</li>
+                    <li>Debo poder seleccionar el tipo de asunto</li>
+                    <li>Al enviar el mensaje, debo ver un mensaje de confirmación</li>
+                    <li>El mensaje debe guardarse en la base de datos</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <th>Prioridad</th>
+            <td class="priority-medium">Media</td>
+        </tr>
+        <tr>
+            <th>Estimación</th>
+            <td>3 puntos</td>
+        </tr>
+    </table>
+
+    <div class="section-title">🎬 MULTIMEDIA (VIDEOS)</div>
+
+    <!-- HU-022 -->
+    <table>
+        <tr><th>ID</th><td class="hu-number">HU-022</td></tr>
+        <tr><th>Título</th><td>Gestionar Videos de Propiedad</td></tr>
+        <tr><th>Como</th><td>propietario</td></tr>
+        <tr><th>Quiero</th><td>subir, ver y eliminar videos de mis propiedades</td></tr>
+        <tr><th>Para</th><td>mostrar recorridos virtuales o mayor detalle del inmueble</td></tr>
+        <tr><th>Criterios de Aceptación</th><td>
+            <ul>
+                <li>Al publicar o editar una propiedad, debo poder subir archivos de video</li>
+                <li>Debo poder establecer un video como principal</li>
+                <li>Debo poder eliminar videos que ya no desee publicar</li>
+                <li>Los videos deben almacenarse en el servidor y asociarse a la propiedad en la base de datos</li>
+            </ul>
+        </td></tr>
+        <tr><th>Prioridad</th><td class="priority-medium">Media</td></tr>
+        <tr><th>Estimación</th><td>5 puntos</td></tr>
+    </table>
+
+    <div class="section-title">💬 CHAT EN PLATAFORMA</div>
+
+    <!-- HU-023 -->
+    <table>
+        <tr><th>ID</th><td class="hu-number">HU-023</td></tr>
+        <tr><th>Título</th><td>Chatear con Arrendador o Arrendatario</td></tr>
+        <tr><th>Como</th><td>usuario autenticado (arrendador o arrendatario)</td></tr>
+        <tr><th>Quiero</th><td>enviar y recibir mensajes dentro de la plataforma</td></tr>
+        <tr><th>Para</th><td>negociar sin depender solo de WhatsApp</td></tr>
+        <tr><th>Criterios de Aceptación</th><td>
+            <ul>
+                <li>Debo acceder al módulo Chat desde el panel de administración</li>
+                <li>Debo ver mis conversaciones activas y archivadas</li>
+                <li>Debo poder enviar mensajes de texto y recibir respuestas en tiempo casi real (polling)</li>
+                <li>Solo los participantes de la conversación pueden leer los mensajes</li>
+                <li>Debo poder archivar y reactivar conversaciones</li>
+            </ul>
+        </td></tr>
+        <tr><th>Prioridad</th><td class="priority-high">Alta</td></tr>
+        <tr><th>Estimación</th><td>8 puntos</td></tr>
+    </table>
+
+    <!-- HU-024 -->
+    <table>
+        <tr><th>ID</th><td class="hu-number">HU-024</td></tr>
+        <tr><th>Título</th><td>Iniciar Chat desde Detalle de Propiedad</td></tr>
+        <tr><th>Como</th><td>usuario interesado autenticado</td></tr>
+        <tr><th>Quiero</th><td>iniciar una conversación con el propietario desde la ficha de la propiedad</td></tr>
+        <tr><th>Para</th><td>consultar disponibilidad y condiciones de forma directa</td></tr>
+        <tr><th>Criterios de Aceptación</th><td>
+            <ul>
+                <li>En la página de detalles debe aparecer el botón "Iniciar conversación en la plataforma" si estoy logueado</li>
+                <li>Si no estoy logueado, debo ver un enlace para iniciar sesión</li>
+                <li>Al iniciar la conversación, debo ser redirigido al módulo de Chat</li>
+                <li>No debe crearse una conversación duplicada para la misma propiedad y los mismos usuarios</li>
+            </ul>
+        </td></tr>
+        <tr><th>Prioridad</th><td class="priority-high">Alta</td></tr>
+        <tr><th>Estimación</th><td>5 puntos</td></tr>
+    </table>
+
+    <!-- HU-025 -->
+    <table>
+        <tr><th>ID</th><td class="hu-number">HU-025</td></tr>
+        <tr><th>Título</th><td>Iniciar Chat con Arrendatario por Email</td></tr>
+        <tr><th>Como</th><td>propietario (arrendador)</td></tr>
+        <tr><th>Quiero</th><td>abrir una conversación buscando al arrendatario por correo electrónico</td></tr>
+        <tr><th>Para</th><td>contactar a usuarios registrados sobre una de mis propiedades</td></tr>
+        <tr><th>Criterios de Aceptación</th><td>
+            <ul>
+                <li>Debo seleccionar una de mis propiedades y el email del arrendatario</li>
+                <li>El sistema debe validar que el usuario exista en la plataforma</li>
+                <li>Debo poder enviar el primer mensaje al crear la conversación</li>
+                <li>No debo poder iniciar chat consigo mismo</li>
+            </ul>
+        </td></tr>
+        <tr><th>Prioridad</th><td class="priority-medium">Media</td></tr>
+        <tr><th>Estimación</th><td>5 puntos</td></tr>
+    </table>
+
+    <div class="section-title">📋 ARRENDAMIENTOS Y CONTRATOS</div>
+
+    <!-- HU-026 -->
+    <table>
+        <tr><th>ID</th><td class="hu-number">HU-026</td></tr>
+        <tr><th>Título</th><td>Crear Arrendamiento</td></tr>
+        <tr><th>Como</th><td>propietario (arrendador)</td></tr>
+        <tr><th>Quiero</th><td>formalizar un arrendamiento desde una conversación de chat</td></tr>
+        <tr><th>Para</th><td>registrar canon, fechas y vincular al arrendatario</td></tr>
+        <tr><th>Criterios de Aceptación</th><td>
+            <ul>
+                <li>Solo el propietario puede crear el arrendamiento desde el chat</li>
+                <li>Debo indicar canon mensual, fecha de inicio y opcionalmente fecha de fin</li>
+                <li>La fecha de inicio no puede ser anterior a hoy</li>
+                <li>Al crear el arrendamiento, la propiedad debe marcarse como "arrendada"</li>
+                <li>Debe crearse automáticamente un registro de contrato en estado borrador</li>
+                <li>No debe permitirse más de un arrendamiento activo por la misma propiedad y arrendatario</li>
+            </ul>
+        </td></tr>
+        <tr><th>Prioridad</th><td class="priority-high">Alta</td></tr>
+        <tr><th>Estimación</th><td>8 puntos</td></tr>
+    </table>
+
+    <!-- HU-027 -->
+    <table>
+        <tr><th>ID</th><td class="hu-number">HU-027</td></tr>
+        <tr><th>Título</th><td>Gestionar Mis Arrendamientos</td></tr>
+        <tr><th>Como</th><td>arrendador o arrendatario</td></tr>
+        <tr><th>Quiero</th><td>ver y administrar mis arrendamientos activos e históricos</td></tr>
+        <tr><th>Para</th><td>dar seguimiento a los contratos en curso</td></tr>
+        <tr><th>Criterios de Aceptación</th><td>
+            <ul>
+                <li>Debo acceder al módulo Arrendamientos desde el panel</li>
+                <li>Debo ver arrendamientos activos y archivados (finalizados o cancelados)</li>
+                <li>La lista debe mostrar propiedad, partes, canon y fechas</li>
+                <li>El propietario debe poder finalizar o cancelar un arrendamiento activo</li>
+            </ul>
+        </td></tr>
+        <tr><th>Prioridad</th><td class="priority-high">Alta</td></tr>
+        <tr><th>Estimación</th><td>5 puntos</td></tr>
+    </table>
+
+    <!-- HU-028 -->
+    <table>
+        <tr><th>ID</th><td class="hu-number">HU-028</td></tr>
+        <tr><th>Título</th><td>Generar y Descargar Contrato</td></tr>
+        <tr><th>Como</th><td>arrendador o arrendatario vinculado al arrendamiento</td></tr>
+        <tr><th>Quiero</th><td>generar un documento de contrato con los datos del arrendamiento</td></tr>
+        <tr><th>Para</th><td>tener un borrador legal listo para revisión y firma</td></tr>
+        <tr><th>Criterios de Aceptación</th><td>
+            <ul>
+                <li>Debo poder generar el contrato desde el módulo de Arrendamientos</li>
+                <li>El documento debe incluir datos de propiedad, arrendador, arrendatario, canon y fechas</li>
+                <li>Debo poder descargar el contrato generado (PDF y/o Word)</li>
+                <li>El estado del contrato debe actualizarse a "generado"</li>
+            </ul>
+        </td></tr>
+        <tr><th>Prioridad</th><td class="priority-high">Alta</td></tr>
+        <tr><th>Estimación</th><td>8 puntos</td></tr>
+    </table>
+
+    <!-- HU-029 -->
+    <table>
+        <tr><th>ID</th><td class="hu-number">HU-029</td></tr>
+        <tr><th>Título</th><td>Subir Contrato Firmado</td></tr>
+        <tr><th>Como</th><td>participante del arrendamiento</td></tr>
+        <tr><th>Quiero</th><td>subir el contrato ya firmado</td></tr>
+        <tr><th>Para</th><td>dejar constancia digital del acuerdo cerrado</td></tr>
+        <tr><th>Criterios de Aceptación</th><td>
+            <ul>
+                <li>Debo poder cargar un archivo (PDF o imagen) del contrato firmado</li>
+                <li>Debo poder descargar el contrato firmado posteriormente</li>
+                <li>El estado del contrato debe actualizarse a "firmado"</li>
+                <li>Solo usuarios vinculados al arrendamiento (o super admin) pueden acceder</li>
+            </ul>
+        </td></tr>
+        <tr><th>Prioridad</th><td class="priority-medium">Media</td></tr>
+        <tr><th>Estimación</th><td>5 puntos</td></tr>
+    </table>
+
+    <div class="section-title">🛡️ ADMINISTRACIÓN GLOBAL</div>
+
+    <!-- HU-030 -->
+    <table>
+        <tr><th>ID</th><td class="hu-number">HU-030</td></tr>
+        <tr><th>Título</th><td>Panel Super Administrador</td></tr>
+        <tr><th>Como</th><td>super administrador</td></tr>
+        <tr><th>Quiero</th><td>supervisar usuarios, propiedades, arrendamientos y contratos</td></tr>
+        <tr><th>Para</th><td>moderar la plataforma y resolver incidencias</td></tr>
+        <tr><th>Criterios de Aceptación</th><td>
+            <ul>
+                <li>Solo usuarios con rol <em>super_admin</em> deben ver el menú Super Admin</li>
+                <li>Debo ver listados de: usuarios, propiedades, arrendamientos y contratos</li>
+                <li>La información debe cargarse mediante el servicio de administración (API)</li>
+            </ul>
+        </td></tr>
+        <tr><th>Prioridad</th><td class="priority-medium">Media</td></tr>
+        <tr><th>Estimación</th><td>5 puntos</td></tr>
+    </table>
+
+    <!-- HU-031 -->
+    <table>
+        <tr><th>ID</th><td class="hu-number">HU-031</td></tr>
+        <tr><th>Título</th><td>Asignar Roles de Usuario</td></tr>
+        <tr><th>Como</th><td>super administrador</td></tr>
+        <tr><th>Quiero</th><td>cambiar el rol de un usuario entre <em>user</em> y <em>super_admin</em></td></tr>
+        <tr><th>Para</th><td>delegar o revocar permisos de administración</td></tr>
+        <tr><th>Criterios de Aceptación</th><td>
+            <ul>
+                <li>Desde el panel Super Admin debo poder asignar rol a cualquier usuario</li>
+                <li>El cambio debe persistir en la base de datos de inmediato</li>
+                <li>Debo recibir confirmación visual del cambio</li>
+            </ul>
+        </td></tr>
+        <tr><th>Prioridad</th><td class="priority-low">Baja</td></tr>
+        <tr><th>Estimación</th><td>3 puntos</td></tr>
+    </table>
+
+    <div class="section-title">🏗️ ARQUITECTURA (REFERENCIA)</div>
+
+    <table>
+        <tr><th>Nota</th><td>
+            La lógica de negocio expuesta al frontend se implementa como <strong>microservicios REST</strong> independientes bajo <code>/api/</code>,
+            cada uno con responsabilidad única. Ver documentación técnica en <code>DOCUMENTACION.md</code>.
+        </td></tr>
+    </table>
+
+    <div class="bloque-final">
+        <h2>Resumen de Prioridades</h2>
+        <p><strong>Alta Prioridad (MVP):</strong> HU-001, HU-002, HU-005, HU-006, HU-007, HU-008, HU-010, HU-011, HU-012, HU-013, HU-014, HU-015, HU-023, HU-024, HU-026, HU-027, HU-028</p>
+        <p><strong>Media Prioridad:</strong> HU-003, HU-004, HU-009, HU-016, HU-017, HU-018, HU-021, HU-022, HU-025, HU-029, HU-030</p>
+        <p><strong>Baja Prioridad (Mejoras Futuras):</strong> HU-019, HU-020, HU-031</p>
+        <p><strong>Total historias:</strong> 31 (HU-001 a HU-031)</p>
+    </div>
+
+    <div class="pie-doc">
+        <p><strong>Última actualización:</strong> Mayo 2026</p>
+        <p><strong>Versión del documento:</strong> 2.0</p>
+    </div>
+
+</body>
+</html>
+
