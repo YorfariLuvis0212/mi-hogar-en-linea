@@ -14,7 +14,7 @@ mi-hogar-en-linea/
 │   ├── database/           # @mh/database  — Prisma, migraciones y cliente
 │   └── config/             # @mh/config    — tsconfig base compartido
 ├── docs/                   # Documentación vigente (este directorio + legacy/)
-├── .github/                # CI y plantillas de PR/issue
+├── .github/                # CI (GitHub Actions)
 ├── AGENTS.md               # Contexto técnico vigente
 └── BITACORA.md             # Bitácora de cambios
 ```

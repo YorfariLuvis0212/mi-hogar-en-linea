@@ -317,6 +317,36 @@ D-111 a D-115 en [AGENTS.md](./AGENTS.md). Detalle arquitectónico en
 [docs/architecture/README.md](./docs/architecture/README.md) y reparto de trabajo en
 [docs/team/roles.md](./docs/team/roles.md).
 
+### 2026-11-24 — INIT-008 Retiro de plantillas de GitHub
+
+- Tipo: `chore`, `decision`.
+- Dominio: Ingeniería y gestión del desarrollo.
+- Responsable: Equipo — inicialización.
+- Referencia: rama `feat/reconstruccion-nextjs` (árbol de trabajo).
+- Estado: Integrado en el árbol de trabajo.
+
+#### Objetivo
+
+Mantener en el repositorio únicamente lo necesario para construir, validar y desplegar;
+retirar las plantillas de GitHub (Pull Request e issues).
+
+#### Cambios realizados
+
+- Eliminados `.github/pull_request_template.md` y los archivos de
+  `.github/ISSUE_TEMPLATE/` (historia de usuario y reporte de defecto).
+- Se conserva el flujo de integración continua (`.github/workflows/ci.yml`).
+- Referencias actualizadas en `AGENTS.md` y `docs/architecture/README.md`.
+
+#### Validación
+
+| Verificación        | Resultado | Evidencia                         |
+| ------------------- | --------- | --------------------------------- |
+| `pnpm format:check` | PASS      | Todo el código conforme al estilo |
+
+#### Decisiones y documentación
+
+Rectifica la referencia a plantillas registrada en `INIT-006`.
+
 ## 5. Pendientes conocidos (sin registrar como terminados)
 
 - Panel de administración y moderación, reportes y bloqueos.

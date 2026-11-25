@@ -101,7 +101,7 @@ mi-hogar-en-linea/
 ├── docs/                   # architecture/, team/ y legacy/
 ├── AGENTS.md
 ├── BITACORA.md
-└── .github/                # CI y plantillas de PR/issue
+└── .github/                # CI (GitHub Actions)
 ```
 
 Dominios en `apps/web/src/modules/`:
