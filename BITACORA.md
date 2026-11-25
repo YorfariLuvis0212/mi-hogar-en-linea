@@ -382,6 +382,45 @@ por lo que no surtía efecto alguno.
 
 Rectifica la mención a `.npmrc` de `INIT-007`.
 
+### 2026-11-24 — INIT-010 Unión de historial con `main` y retiro del código legacy
+
+- Tipo: `chore`, `migration`.
+- Dominio: Repositorio y CI/CD.
+- Responsable: Equipo — inicialización.
+- Referencia: rama `feat/reconstruccion-nextjs` (commits `45c7992`, `665d097`).
+- Estado: Integrado; validado localmente.
+
+#### Objetivo
+
+Habilitar la Pull Request hacia `main`. Las ramas `main` (proyecto PHP/MySQL) y
+`feat/reconstruccion-nextjs` tenían raíces independientes (sin ancestro común), por lo
+que GitHub no permitía crear la PR.
+
+#### Cambios realizados
+
+- `git merge origin/main --allow-unrelated-histories` para crear un ancestro común, sin
+  conflictos (rutas disjuntas). Commit `45c7992`.
+- Retiro de los 73 archivos legacy heredados de `main` (código PHP, esquema MySQL,
+  `css/`, `js/`, `uploads/`, `docs/*.pdf`, `DOCUMENTACION.md`, `HISTORIAS_DE_USUARIO.html`),
+  conforme a la restricción de no usar PHP/MySQL. Commit `665d097`.
+- La copia de referencia del sistema anterior se conserva en `docs/legacy/`.
+
+#### Impacto técnico y funcional
+
+El árbol de la rama queda solo con el monorepo (cero archivos `.php`). La PR hacia `main`
+mostrará el monorepo como agregado y el código legacy como eliminado.
+
+#### Validación
+
+| Verificación         | Resultado | Evidencia                |
+| -------------------- | --------- | ------------------------ |
+| `git merge-base`     | PASS      | Ancestro común `0b0e605` |
+| `git ls-files *.php` | PASS      | 0 archivos en el árbol   |
+
+#### Decisiones y documentación
+
+Documenta la operación aprobada por el usuario para desbloquear la PR.
+
 ## 5. Pendientes conocidos (sin registrar como terminados)
 
 - Panel de administración y moderación, reportes y bloqueos.
