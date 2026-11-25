@@ -347,6 +347,41 @@ retirar las plantillas de GitHub (Pull Request e issues).
 
 Rectifica la referencia a plantillas registrada en `INIT-006`.
 
+### 2026-11-24 — INIT-009 Retiro del `.npmrc` sin efecto
+
+- Tipo: `chore`, `fix`.
+- Dominio: Infraestructura y toolchain.
+- Responsable: Equipo — inicialización.
+- Referencia: rama `feat/reconstruccion-nextjs` (árbol de trabajo).
+- Estado: Integrado en el árbol de trabajo; validado localmente.
+
+#### Objetivo
+
+Eliminar configuración muerta: el `.npmrc` declaraba `node-linker=hoisted`, ajuste que
+pnpm 12 ya no lee desde ese archivo (`pnpm config get node-linker` devuelve `undefined`),
+por lo que no surtía efecto alguno.
+
+#### Cambios realizados
+
+- Eliminado `.npmrc`.
+- El workspace usa el linker por defecto de pnpm (`isolated`), verificado en
+  `node_modules/.modules.yaml`.
+- La resolución de los paquetes internos se mantiene por los enlaces del workspace
+  (`apps/*/node_modules/@mh/*` → `packages/*`).
+
+#### Validación
+
+| Verificación     | Resultado | Evidencia                    |
+| ---------------- | --------- | ---------------------------- |
+| `pnpm install`   | PASS      | Sin cambios pendientes       |
+| `pnpm lint`      | PASS      | 2/2 tareas                   |
+| `pnpm typecheck` | PASS      | 6/6 tareas, sin errores      |
+| `pnpm test:run`  | PASS      | 3/3 tareas, pruebas en verde |
+
+#### Decisiones y documentación
+
+Rectifica la mención a `.npmrc` de `INIT-007`.
+
 ## 5. Pendientes conocidos (sin registrar como terminados)
 
 - Panel de administración y moderación, reportes y bloqueos.
