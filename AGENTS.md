@@ -20,7 +20,7 @@ trabajo en [docs/team/roles.md](./docs/team/roles.md).
 | Idioma de interfaz | Español                                                      |
 | Moneda             | COP                                                          |
 | Zona horaria       | America/Bogota                                               |
-| Equipo             | Cuatro desarrolladores                                       |
+| Equipo             | Cinco desarrolladores (áreas D1–D5)                          |
 
 Objetivos: visibilizar la oferta de arrendamiento local, facilitar búsqueda y contacto
 directo y privado, incorporar controles de confianza y antifraude y construir un
@@ -47,6 +47,10 @@ Implementado y verificado:
 - Monorepo: `apps/web` (Next.js) reutilizado sin cambios de lógica, `apps/api`
   (NestJS) como esqueleto y paquetes compartidos `@mh/contracts`, `@mh/database`
   y `@mh/config`.
+
+El **frontend público** se rediseñará y reconstruirá por completo; la implementación actual
+sirve de base técnica. El diseño se define primero en Figma y el PHP anterior se usa
+únicamente como referencia funcional, no como plantilla visual.
 
 Pendiente (backlog de equipo, no iniciado):
 
@@ -211,20 +215,22 @@ Definition of Done:
 
 ## 11. Equipo y distribución de trabajo
 
-| Responsable | Dominio                                | Ámbito                                                                                        |
-| ----------- | -------------------------------------- | --------------------------------------------------------------------------------------------- |
-| Dev 1       | Backend NestJS, identidad y seguridad  | `apps/api`, better-auth, autorización, cabeceras, antiabuso, despliegue de la API             |
-| Dev 2       | Datos y dominio de propiedades         | `packages/database` (Prisma, migraciones), `packages/contracts`, propiedades y mensajería     |
-| Dev 3       | Frontend público y experiencia (UX/UI) | Catálogo, búsqueda, filtros, ficha, favoritos, accesibilidad y SEO                            |
-| Dev 4       | Paneles, formularios e interacción     | `/panel`, formularios, mensajería en UI, visitas, notificaciones, administración y moderación |
+| Área | Responsable / dominio                                                     | Ámbito                                                                                        |
+| ---- | ------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| D1   | Líder técnico: backend NestJS, identidad y seguridad                      | `apps/api`, better-auth, autorización, cabeceras, antiabuso, despliegue de la API             |
+| D2   | Datos y dominio de propiedades                                            | `packages/database` (Prisma, migraciones), `packages/contracts`, propiedades y mensajería     |
+| D3   | **Frontend público y experiencia (UX/UI)** — Erick Manuel Moreno Palacios | Catálogo, búsqueda, filtros, ficha, favoritos, accesibilidad y SEO                            |
+| D4   | Paneles, formularios e interacción                                        | `/panel`, formularios, mensajería en UI, visitas, notificaciones, administración y moderación |
+| D5   | Por definir con el plan de migración                                      | Pendiente de confirmar                                                                        |
 
-Revisión cruzada: Dev 1 ↔ Dev 4 (identidad/seguridad/comunicación) y Dev 2 ↔ Dev 3
-(propiedades/catálogo/experiencia). Detalle, propietarios por ruta y primeras
-tareas en [docs/team/roles.md](./docs/team/roles.md).
+Revisión cruzada: D1 ↔ D4 (identidad/seguridad/comunicación) y D2 ↔ D3
+(propiedades/catálogo/experiencia). Detalle, alcance y límites por área, propietarios por
+ruta y primeras tareas en [docs/team/roles.md](./docs/team/roles.md).
 
 ### Control de versiones
 
 - `main` protegida; ramas de corta duración por issue.
+- Una rama por área de trabajo (D1–D5); el frontend público trabaja en `frontend-publico`.
 - Convención de ramas: `feat/mh-123-descripcion`, `fix/mh-124-...`,
   `refactor/...`, `chore/...`, `docs/...`, `test/...`.
 - Cada PR referencia su issue, describe el cambio, pruebas e impacto y requiere
@@ -232,20 +238,22 @@ tareas en [docs/team/roles.md](./docs/team/roles.md).
 
 ## 12. Registro de decisiones
 
-| ID    | Decisión                                                                                                 |
-| ----- | -------------------------------------------------------------------------------------------------------- |
-| D-101 | Reconstrucción completa en Next.js 16 + TypeScript; el PHP/MySQL queda como referencia funcional.        |
-| D-102 | PostgreSQL en Neon como base de datos y Prisma 7 como ORM.                                               |
-| D-103 | better-auth para identidad y sesiones.                                                                   |
-| D-104 | shadcn/ui estilo `base-nova` (sobre `@base-ui/react`) con Tailwind CSS 4.                                |
-| D-105 | pnpm como gestor de paquetes del repositorio.                                                            |
-| D-106 | Arquitectura modular por dominios en `src/modules/`.                                                     |
-| D-107 | Moderación y disponibilidad como estados independientes de la publicación.                               |
-| D-108 | Dirección exacta privada por defecto; exposición a nivel de barrio.                                      |
-| D-109 | Adaptador dual de Prisma (Neon en producción, pg en local).                                              |
-| D-110 | Exclusión de publicidad externa; monetización por planes futuros.                                        |
-| D-111 | Monorepo con pnpm Workspaces + Turborepo: `apps/web` y `apps/api` independientes.                        |
-| D-112 | Paquetes compartidos `@mh/contracts`, `@mh/database` y `@mh/config`.                                     |
-| D-113 | NestJS como backend independiente (REST); migración incremental desde el frontend.                       |
-| D-114 | Prisma y las migraciones viven en `packages/database`, consumidos por ambas aplicaciones.                |
-| D-115 | Sin WebSocket en el primer sprint: las funciones serverless de Vercel no alojan conexiones persistentes. |
+| ID    | Decisión                                                                                                                                                         |
+| ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| D-101 | Reconstrucción completa en Next.js 16 + TypeScript; el PHP/MySQL queda como referencia funcional.                                                                |
+| D-102 | PostgreSQL en Neon como base de datos y Prisma 7 como ORM.                                                                                                       |
+| D-103 | better-auth para identidad y sesiones.                                                                                                                           |
+| D-104 | shadcn/ui estilo `base-nova` (sobre `@base-ui/react`) con Tailwind CSS 4.                                                                                        |
+| D-105 | pnpm como gestor de paquetes del repositorio.                                                                                                                    |
+| D-106 | Arquitectura modular por dominios en `src/modules/`.                                                                                                             |
+| D-107 | Moderación y disponibilidad como estados independientes de la publicación.                                                                                       |
+| D-108 | Dirección exacta privada por defecto; exposición a nivel de barrio.                                                                                              |
+| D-109 | Adaptador dual de Prisma (Neon en producción, pg en local).                                                                                                      |
+| D-110 | Exclusión de publicidad externa; monetización por planes futuros.                                                                                                |
+| D-111 | Monorepo con pnpm Workspaces + Turborepo: `apps/web` y `apps/api` independientes.                                                                                |
+| D-112 | Paquetes compartidos `@mh/contracts`, `@mh/database` y `@mh/config`.                                                                                             |
+| D-113 | NestJS como backend independiente (REST); migración incremental desde el frontend.                                                                               |
+| D-114 | Prisma y las migraciones viven en `packages/database`, consumidos por ambas aplicaciones.                                                                        |
+| D-115 | Sin WebSocket en el primer sprint: las funciones serverless de Vercel no alojan conexiones persistentes.                                                         |
+| D-116 | El frontend público se rediseña y reconstruye por completo; el diseño se define primero en Figma y el PHP anterior es referencia funcional, no plantilla visual. |
+| D-117 | Una rama por área de trabajo (D1–D5), además de las ramas cortas por issue.                                                                                      |

@@ -466,6 +466,48 @@ entorno del proceso, replicando las condiciones de CI. El error `P1000` de Prism
 aparece durante el build es no fatal y se tolera cuando la base de datos no está
 disponible.
 
+### 2026-11-24 — INIT-012 Alcance del frontend público (área D3) y rama por área
+
+- Tipo: `docs`.
+- Dominio: Equipo y gobernanza.
+- Responsable: Erick Manuel Moreno Palacios (D3).
+- Referencia: rama `feat/reconstruccion-nextjs`.
+- Estado: Documentado; desarrollo aún no iniciado.
+
+#### Objetivo
+
+Alinear la documentación del repositorio con el plan de migración y ejecución vigente
+(8 sprints, 16 semanas), que identifica las áreas de trabajo como **D1–D5**: el titular
+asume exclusivamente el área **D3 — Frontend Público** y cada área trabaja en su propia
+rama.
+
+#### Cambios realizados
+
+- `docs/team/roles.md`: las áreas pasan a identificarse como D1–D5 y se añade la sección
+  **Rol D3 — Frontend Público** con alcance, límites, titulares esperados de los contratos
+  de API y entregables por sprint (S0–S7). Se documenta la convención de una rama por área.
+- `AGENTS.md`: tabla de equipo alineada (D1–D5), mención del titular de D3, convención de
+  rama por área y decisiones `D-116` (el frontend público se reconstruye desde un diseño
+  propio en Figma) y `D-117` (una rama por área de trabajo).
+- Se explicita que el frontend público se **rediseña y reconstruye**: la interfaz actual
+  sirve de base técnica y el sistema PHP solo como referencia funcional.
+
+#### Alcance excluido
+
+Arrendamientos y plantillas PDF (MH-050, MH-051), panel administrativo, dashboard privado
+del propietario, chat completo, servicios NestJS, Prisma y base de datos.
+
+#### Validación
+
+| Verificación        | Resultado | Evidencia                      |
+| ------------------- | --------- | ------------------------------ |
+| `pnpm format:check` | PASS      | Documentos conformes al estilo |
+
+#### Decisiones y documentación
+
+El desarrollo del frontend público no inicia hasta recibir los diseños de Figma. Las tareas
+de arrendamientos y PDF pasan a D4.
+
 ## 5. Pendientes conocidos (sin registrar como terminados)
 
 - Panel de administración y moderación, reportes y bloqueos.
