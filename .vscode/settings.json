@@ -1,0 +1,11 @@
+{
+  // Oculta en el explorador las carpetas generadas e ignoradas por Git
+  // (.next, dist, .turbo, dependencias y cache de TypeScript).
+  "explorer.excludeGitIgnore": true,
+  "files.exclude": {
+    "**/.next": true,
+    "**/dist": true,
+    "**/.turbo": true,
+    "**/*.tsbuildinfo": true
+  }
+}

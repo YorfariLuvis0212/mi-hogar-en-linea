@@ -1,0 +1,28 @@
+{
+  "name": "mi-hogar-en-linea",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@12.16.1",
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test:run",
+    "test:run": "turbo run test:run",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "db:generate": "pnpm --filter @mh/database db:generate",
+    "db:migrate": "pnpm --filter @mh/database db:migrate",
+    "db:deploy": "pnpm --filter @mh/database db:deploy",
+    "db:push": "pnpm --filter @mh/database db:push",
+    "db:studio": "pnpm --filter @mh/database db:studio",
+    "db:seed": "pnpm --filter @mh/web db:seed"
+  },
+  "devDependencies": {
+    "prettier": "^3.10.1",
+    "prettier-plugin-tailwindcss": "^0.8.1",
+    "turbo": "^2",
+    "typescript": "^5"
+  }
+}
