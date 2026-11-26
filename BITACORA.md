@@ -508,6 +508,46 @@ del propietario, chat completo, servicios NestJS, Prisma y base de datos.
 El desarrollo del frontend público no inicia hasta recibir los diseños de Figma. Las tareas
 de arrendamientos y PDF pasan a D4.
 
+### 2026-11-24 — INIT-013 El área D3 pasa a cubrir todo el frontend (`apps/web`)
+
+- Tipo: `docs`.
+- Dominio: Equipo y gobernanza.
+- Responsable: Erick Manuel Moreno Palacios (D3).
+- Referencia: rama `feat/reconstruccion-nextjs`.
+- Estado: Documentado; desarrollo aún no iniciado.
+
+#### Objetivo
+
+Registrar la decisión del equipo: el titular asume el **frontend completo**, no solo la
+experiencia pública.
+
+#### Cambios realizados
+
+- `docs/team/roles.md`: D3 pasa a «Frontend completo» (`apps/web`: público, paneles,
+  formularios, mensajería en UI y administración/moderación); se fusionan los entregables
+  por sprint que el plan repartía entre D3 y D4; `apps/web/**` queda a cargo de D3 con
+  revisión de D1 y D2.
+- `AGENTS.md`: tabla de equipo actualizada, decisión `D-116` ampliada al frontend completo
+  y rama del área renombrada a `frontend`.
+- D4 queda por confirmar con el plan de migración: su frente anterior (paneles) se integró
+  en D3.
+
+#### Alcance excluido
+
+`apps/api` (NestJS), `packages/database` (Prisma y migraciones), `packages/contracts` y las
+operaciones de base de datos. La generación de documentos y PDF de contratos corresponde al
+backend.
+
+#### Validación
+
+| Verificación        | Resultado | Evidencia                      |
+| ------------------- | --------- | ------------------------------ |
+| `pnpm format:check` | PASS      | Documentos conformes al estilo |
+
+#### Decisiones y documentación
+
+Amplía el alcance registrado en `INIT-012`. El diseño en Figma cubre el frontend completo.
+
 ## 5. Pendientes conocidos (sin registrar como terminados)
 
 - Panel de administración y moderación, reportes y bloqueos.
